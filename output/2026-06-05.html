@@ -112,6 +112,10 @@ body{
   <main class="main-content" id="main-content"></main>
 </div>
 <script>
+// Base path: detect sub-path deployment (e.g. /daily-report-/)
+// Simply take everything before the last slash in the current URL path
+(function(){var p=window.location.pathname,i=p.lastIndexOf("/");window.BP=i>=0?p.substring(0,i+1):"/";})();
+
 const REPORTS = {
   "2026-06-05": {
     "date": "2026-06-05",
@@ -233,37 +237,16 @@ const REPORTS = {
     "audio_file": "audio/2026-06-08.mp3"
   }
 };
-// Detect base path for sub-path deployments (e.g. /daily-report-/)
-const BP = (function(){
-  var p = window.location.pathname;
-  var m = p.match(/^(\/.*\/)\d{4}-\d{2}-\d{2}\.html$/);
-  return m ? m[1] : '/';
-})();
 
-function getDateFromPath(){
-  var m = window.location.pathname.match(/\/(\d{4}-\d{2}-\d{2})\.html$/);
-  return m ? m[1] : null;
-}
+function getDateFromPath(){var m=window.location.pathname.match(/\/(\d{4}-\d{2}-\d{2})\.html$/);return m?m[1]:null;}
 function navigateTo(d){
-  if(d){
-    window.history.pushState({}, '', BP + d + '.html');
-  } else {
-    window.history.pushState({}, '', BP);
-  }
+  if(d){window.history.pushState({},'',window.BP+d+'.html');}
+  else{window.history.pushState({},'',window.BP);}
   render();
 }
-function fmtCN(s){
-  var d = new Date(s+'T00:00:00');
-  var w = ['日','一','二','三','四','五','六'];
-  return (d.getMonth()+1)+'月'+d.getDate()+'日 周'+w[d.getDay()];
-}
-function fmtShort(s){
-  var d = new Date(s+'T00:00:00');
-  return (d.getMonth()+1)+'.'+d.getDate();
-}
+function fmtCN(s){var d=new Date(s+'T00:00:00'),w=['日','一','二','三','四','五','六'];return(d.getMonth()+1)+'月'+d.getDate()+'日 周'+w[d.getDay()];}
 function fmtTime(t){if(!t||isNaN(t))return'0:00';var m=Math.floor(t/60),s=Math.floor(t%60);return m+':'+(s<10?'0':'')+s;}
 
-// Calendar
 function renderCal(cur){
   var n=new Date(),y=n.getFullYear(),m=n.getMonth();
   var fd=new Date(y,m,1).getDay(),dim=new Date(y,m+1,0).getDate();
@@ -275,51 +258,42 @@ function renderCal(cur){
     var ds=y+'-'+(m+1+'').padStart(2,'0')+'-'+(d+'').padStart(2,'0');
     var has=rds[ds],isA=ds===cur;
     var cls='cal-day'+(has?' has-report':'')+(isA?' active':'');
-    if(has){
-      h+='<a href="'+BP+ds+'.html" class="'+cls+'" onclick="event.preventDefault();navigateTo(\''+ds+'\')">'+d+'</a>';
-    } else {
-      h+='<div class="'+cls+'">'+d+'</div>';
-    }
+    if(has){h+='<a href="'+window.BP+ds+'.html" class="'+cls+'" onclick="event.preventDefault();navigateTo(\''+ds+'\')">'+d+'</a>';}
+    else{h+='<div class="'+cls+'">'+d+'</div>';}
   }
   h+='</div>';
   document.getElementById('calendar').innerHTML=h;
 }
 
-// Recent
 function renderRecent(cur){
-  var s=Object.keys(REPORTS).sort().reverse();
-  var h='';
+  var s=Object.keys(REPORTS).sort().reverse(),h='';
   s.forEach(function(d){
     var r=REPORTS[d];
-    h+='<a href="'+BP+d+'.html" class="recent-item" onclick="event.preventDefault();navigateTo(\''+d+'\')">'
-      +'<div class="date">'+fmtCN(d)+'</div>'
-      +'<div class="title">'+r.title+'</div>'
-      +(r.audio_file?'<div class="voice-indicator">语音版</div>':'')
-      +'</a>';
+    h+='<a href="'+window.BP+d+'.html" class="recent-item" onclick="event.preventDefault();navigateTo(\''+d+'\')">'
+      +'<div class="date">'+fmtCN(d)+'</div><div class="title">'+r.title+'</div>'
+      +(r.audio_file?'<div class="voice-indicator">语音版</div>':'')+'</a>';
   });
   if(!s.length)h='<div style="color:#3d3d52;font-size:13px;">暂无日报</div>';
   document.getElementById('recent-list').innerHTML=h;
 }
 
-// Home
 function renderHome(){
-  var s=Object.keys(REPORTS).sort().reverse();
-  var lt=s[0];
+  var s=Object.keys(REPORTS).sort().reverse(),lt=s[0];
   var h='<div class="page-header"><div class="breadcrumb">INDEX</div><h2>AI 日报</h2><div class="desc">每日AI行业动态 · 文字 + 语音版</div></div>';
   if(lt){
     var r=REPORTS[lt];
     h+='<div class="feature-card"><div class="meta">最新 · '+fmtCN(lt)+'</div><h3>'+(r.headline_title||r.title)+'</h3>'
       +'<p>'+(r.headline_body||'').substring(0,120)+((r.headline_body||'').length>120?'……':'')+'</p>'
       +'<div class="actions">'
-      +'<a href="'+BP+lt+'.html" onclick="event.preventDefault();navigateTo(\''+lt+'\')">阅读全文</a>'
-      +(r.audio_file?'<a href="'+BP+lt+'.html#player" onclick="event.preventDefault();navigateTo(\''+lt+'\')">收听语音</a>':'')
+      +'<a href="'+window.BP+lt+'.html" onclick="event.preventDefault();navigateTo(\''+lt+'\')">阅读全文</a>'
+      +(r.audio_file?'<a href="'+window.BP+lt+'.html#player" onclick="event.preventDefault();navigateTo(\''+lt+'\')">收听语音</a>':'')
       +'</div></div>';
   }
   h+='<div style="margin-top:32px;">';
   s.forEach(function(d){
     if(lt&&d===lt)return;
     var r=REPORTS[d];
-    h+='<a href="'+BP+d+'.html" class="report-card" onclick="event.preventDefault();navigateTo(\''+d+'\')">'
+    h+='<a href="'+window.BP+d+'.html" class="report-card" onclick="event.preventDefault();navigateTo(\''+d+'\')">'
       +'<div class="date">'+fmtCN(d)+'</div><div class="title">'+r.title+'</div>'
       +'<div class="summary">'+(r.headline_title||'')+'</div>'
       +'<div class="tags">'+r.sections.slice(0,3).map(function(s){return '<span>'+s.name+'</span>';}).join('')+'</div>'
@@ -330,13 +304,11 @@ function renderHome(){
   return h;
 }
 
-// Daily
 function renderDaily(ds){
   var r=REPORTS[ds];
-  if(!r)return '<div class="empty-state"><h3>日报未找到</h3><p><a href="'+BP+'" class="back-link" onclick="event.preventDefault();navigateTo(null)">返回首页</a></p></div>';
-  var h='<a href="'+BP+'" class="back-link" onclick="event.preventDefault();navigateTo(null)">返回首页</a>'
-    +'<div class="report-page">'
-    +'<div class="report-header"><h1>'+r.title+'</h1><div class="meta">'+fmtCN(ds)+'</div></div>';
+  if(!r)return '<div class="empty-state"><h3>日报未找到</h3><p><a href="'+window.BP+'" class="back-link" onclick="event.preventDefault();navigateTo(null)">返回首页</a></p></div>';
+  var h='<a href="'+window.BP+'" class="back-link" onclick="event.preventDefault();navigateTo(null)">返回首页</a>'
+    +'<div class="report-page"><div class="report-header"><h1>'+r.title+'</h1><div class="meta">'+fmtCN(ds)+'</div></div>';
   if(r.audio_file){
     h+='<div class="voice-player" id="player">'
       +'<button class="play-btn" onclick="toggleAudio(\''+ds+'\')" id="play-btn-'+ds+'"></button>'
@@ -354,7 +326,6 @@ function renderDaily(ds){
   return h;
 }
 
-// Audio
 var curAudio=null;
 function toggleAudio(ds){
   var a=document.getElementById('audio-'+ds),b=document.getElementById('play-btn-'+ds),t=document.getElementById('time-'+ds);
@@ -364,7 +335,7 @@ function toggleAudio(ds){
 }
 function onAudioEnd(ds){var b=document.getElementById('play-btn-'+ds),t=document.getElementById('time-'+ds);b.classList.remove('playing');t.textContent='播放结束';curAudio=null;}
 function onTimeUpdate(ds){var t=document.getElementById('time-'+ds),a=document.getElementById('audio-'+ds);t.textContent=fmtTime(a.currentTime)+' / '+fmtTime(a.duration||0);}
-function render(){var d=getDateFromPath();renderCal(d);renderRecent(d);document.getElementById('main-content').innerHTML=(d?renderDaily(d):renderHome());}
+function render(){var d=getDateFromPath();renderCal(d);renderRecent(d);document.getElementById('main-content').innerHTML=d?renderDaily(d):renderHome();}
 window.addEventListener('popstate',render);render();
 </script>
 </body>
