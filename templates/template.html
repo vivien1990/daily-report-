@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 日报 · 每日归档</title>
+<style>
+/* ========== RESET & BASE ========== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Noto Serif SC', 'Georgia', 'Times New Roman', serif;
+  background: #0f0f13;
+  color: #c9c9d0;
+  line-height: 1.7;
+  min-height: 100vh;
+  background-image: 
+    linear-gradient(rgba(40,40,55,0.15) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(40,40,55,0.15) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* ========== FONTS ========== */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
+/* ========== LAYOUT ========== */
+.wrapper { display: flex; max-width: 1400px; margin: 0 auto; min-height: 100vh; }
+
+/* Sidebar */
+.sidebar {
+  width: 320px; min-width: 320px;
+  border-right: 1px solid rgba(255,255,255,0.06);
+  padding: 40px 28px;
+  position: sticky; top: 0; height: 100vh; overflow-y: auto;
+}
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 2px; }
+
+.sidebar-brand { margin-bottom: 40px; }
+.sidebar-brand h1 {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px; font-weight: 600; letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #5a5a6e;
+  margin-bottom: 8px;
+}
+.sidebar-brand .sub {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px; color: #3d3d52; letter-spacing: 1px;
+}
+
+/* Calendar Nav */
+.calendar-nav { margin-bottom: 36px; }
+.calendar-nav h3 {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px; font-weight: 500; letter-spacing: 2px;
+  color: #5a5a6e; margin-bottom: 16px; text-transform: uppercase;
+}
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+.cal-day {
+  aspect-ratio: 1;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px; font-weight: 400;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s;
+  color: #5a5a6e;
+  background: transparent;
+  text-decoration: none;
+}
+.cal-day:hover { background: rgba(255,255,255,0.04); color: #a8a8b8; }
+.cal-day.has-report {
+  color: #c9c9d0;
+  background: rgba(255,255,255,0.04);
+  font-weight: 500;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.cal-day.has-report:hover {
+  background: rgba(180,140,100,0.15);
+  border-color: rgba(180,140,100,0.3);
+  color: #e0c8a8;
+}
+.cal-day.active {
+  background: rgba(180,140,100,0.2);
+  border-color: rgba(180,140,100,0.4);
+  color: #e0c8a8;
+}
+.cal-day.other-month { color: #2a2a3a; pointer-events: none; }
+.cal-month-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px; font-weight: 500; color: #8a8a9a;
+  margin-bottom: 12px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.cal-month-label .year { color: #4a4a5e; font-weight: 300; }
+
+/* Recent List */
+.recent-list { }
+.recent-list h3 {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px; font-weight: 500; letter-spacing: 2px;
+  color: #5a5a6e; margin-bottom: 16px; text-transform: uppercase;
+}
+.recent-item {
+  display: block;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  text-decoration: none;
+  transition: all 0.15s;
+}
+.recent-item:last-child { border-bottom: none; }
+.recent-item:hover { padding-left: 8px; }
+.recent-item .date {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px; font-weight: 500; color: #b8a898;
+  margin-bottom: 4px;
+}
+.recent-item .title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 14px; color: #c9c9d0; line-height: 1.5;
+}
+.recent-item:hover .title { color: #e0c8a8; }
+.recent-item .voice-indicator {
+  display: inline-block;
+  font-size: 11px; color: #6a7a6a;
+  margin-top: 4px;
+}
+.recent-item .voice-indicator::before { content: "♪ "; }
+
+/* ========== MAIN CONTENT ========== */
+.main-content { flex: 1; padding: 40px 48px 60px; max-width: 900px; }
+
+/* Page Header */
+.page-header { margin-bottom: 48px; }
+.page-header .breadcrumb {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px; color: #4a4a5e; letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+.page-header h2 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 28px; font-weight: 700;
+  color: #e8e8f0;
+  margin-bottom: 8px;
+}
+.page-header .desc {
+  font-size: 15px; color: #6a6a7e;
+  line-height: 1.6;
+}
+
+/* Feature Card (latest report) */
+.feature-card {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  padding: 32px;
+  margin-bottom: 24px;
+  transition: all 0.2s;
+}
+.feature-card:hover {
+  background: rgba(255,255,255,0.03);
+  border-color: rgba(180,140,100,0.15);
+}
+.feature-card .meta {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px; color: #5a5a6e; letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+.feature-card h3 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 20px; font-weight: 600;
+  color: #e0c8a8;
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+.feature-card p {
+  font-size: 14px; color: #8a8a9a;
+  line-height: 1.7;
+  margin-bottom: 16px;
+}
+.feature-card .actions {
+  display: flex; gap: 12px; align-items: center;
+}
+.feature-card .actions a {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px; font-weight: 500;
+  color: #b8a898;
+  text-decoration: none;
+  padding: 6px 16px;
+  border: 1px solid rgba(180,140,100,0.2);
+  border-radius: 6px;
+  transition: all 0.15s;
+}
+.feature-card .actions a:hover {
+  background: rgba(180,140,100,0.1);
+  border-color: rgba(180,140,100,0.4);
+  color: #e0c8a8;
+}
+
+/* Report list cards */
+.report-card {
+  display: block;
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  text-decoration: none;
+  transition: all 0.15s;
+  border-radius: 8px;
+}
+.report-card:hover {
+  background: rgba(255,255,255,0.02);
+  padding-left: 28px;
+}
+.report-card:last-child { border-bottom: none; }
+.report-card .date {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px; color: #6a6a7e; margin-bottom: 4px;
+}
+.report-card .title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 16px; font-weight: 500;
+  color: #c9c9d0;
+  margin-bottom: 6px;
+}
+.report-card:hover .title { color: #e0c8a8; }
+.report-card .summary {
+  font-size: 13px; color: #6a6a7e; line-height: 1.5;
+}
+.report-card .tags {
+  margin-top: 8px;
+  display: flex; gap: 8px;
+}
+.report-card .tags span {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px; color: #5a5a6e;
+  padding: 2px 8px;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 4px;
+}
+
+/* Daily report page */
+.report-page { }
+.report-page .report-header {
+  margin-bottom: 32px; padding-bottom: 24px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.report-page .report-header h1 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 28px; font-weight: 700;
+  color: #e8e8f0;
+  margin-bottom: 8px;
+}
+.report-page .report-header .meta {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px; color: #5a5a6e;
+}
+.voice-player {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin: 24px 0 32px;
+  display: flex; align-items: center; gap: 16px;
+}
+.voice-player .play-btn {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(180,140,100,0.3);
+  background: rgba(180,140,100,0.08);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.voice-player .play-btn:hover {
+  background: rgba(180,140,100,0.15);
+  border-color: rgba(180,140,100,0.5);
+}
+.voice-player .play-btn::after {
+  content: "▶";
+  font-size: 14px; color: #e0c8a8;
+  margin-left: 2px;
+}
+.voice-player .play-btn.playing::after { content: "⏸"; }
+.voice-player .player-info {
+  flex: 1;
+}
+.voice-player .player-info .label {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px; color: #5a5a6e; margin-bottom: 2px;
+}
+.voice-player .player-info .time {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px; color: #8a8a9a;
+}
+.voice-player audio { display: none; }
+
+/* Headline block */
+.headline-block {
+  margin-bottom: 36px;
+  padding: 28px;
+  background: linear-gradient(135deg, rgba(180,140,100,0.04), rgba(100,80,60,0.02));
+  border: 1px solid rgba(180,140,100,0.1);
+  border-radius: 10px;
+}
+.headline-block .headline-tag {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px; font-weight: 600; letter-spacing: 2px;
+  color: #b8a898; text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.headline-block h2 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 22px; font-weight: 700;
+  color: #e0c8a8; line-height: 1.4;
+  margin-bottom: 12px;
+}
+.headline-block p {
+  font-size: 14px; color: #9a9aaa; line-height: 1.8;
+}
+.headline-block .comment {
+  margin-top: 16px; padding-top: 16px;
+  border-top: 1px solid rgba(180,140,100,0.1);
+  font-size: 13px; color: #8a8a9a;
+  font-style: italic;
+  line-height: 1.6;
+}
+.headline-block .comment::before {
+  content: "—— ";
+  color: #5a5a6e;
+}
+
+/* Section block */
+.section-block {
+  margin-bottom: 28px;
+  padding: 20px 24px;
+  border-left: 2px solid rgba(180,140,100,0.1);
+  transition: all 0.15s;
+}
+.section-block:hover { border-left-color: rgba(180,140,100,0.3); }
+.section-block h3 {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px; font-weight: 600; letter-spacing: 2px;
+  color: #7a7a8e; text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.section-block p {
+  font-size: 14px; color: #9a9aaa; line-height: 1.8;
+}
+
+/* Daily Insight */
+.insight-block {
+  margin-top: 40px; padding: 24px 28px;
+  background: rgba(180,140,100,0.03);
+  border: 1px solid rgba(180,140,100,0.1);
+  border-radius: 10px;
+}
+.insight-block h3 {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px; font-weight: 600; letter-spacing: 3px;
+  color: #b8a898; text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.insight-block p {
+  font-size: 14px; color: #b8a898; line-height: 1.8;
+  font-style: italic;
+}
+
+/* Back link */
+.back-link {
+  display: inline-block;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px; color: #5a5a6e;
+  text-decoration: none;
+  margin-bottom: 24px;
+  transition: color 0.15s;
+}
+.back-link:hover { color: #b8a898; }
+.back-link::before { content: "← "; }
+
+/* Empty state */
+.empty-state {
+  text-align: center; padding: 80px 40px;
+  color: #4a4a5e;
+}
+.empty-state h3 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 20px; color: #6a6a7e; margin-bottom: 8px;
+}
+.empty-state p { font-size: 14px; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .wrapper { flex-direction: column; }
+  .sidebar { width: 100%; min-width: auto; height: auto; position: static; padding: 24px 20px; }
+  .main-content { padding: 24px 20px 40px; }
+  .calendar-grid { max-width: 280px; }
+}
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <h1>AI 日报</h1>
+      <div class="sub">每日归档 · 文字+语音</div>
+    </div>
+
+    <!-- Calendar -->
+    <div class="calendar-nav" id="calendar-nav">
+      <h3>日历</h3>
+      <div id="calendar"></div>
+    </div>
+
+    <!-- Recent -->
+    <div class="recent-list">
+      <h3>最近</h3>
+      <div id="recent-list"></div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main-content" id="main-content">
+    <!-- Content injected by JS -->
+  </main>
+
+</div>
+
+<script>
+// ========== DATA ==========
+const REPORTS = __REPORTS_DATA__;
+
+// ========== PAGE ROUTER ==========
+function getDateFromPath() {
+  const p = window.location.pathname;
+  const m = p.match(/\/(\d{4}-\d{2}-\d{2})\.html$/);
+  return m ? m[1] : null;
+}
+
+function navigateTo(dateStr) {
+  if (dateStr) {
+    window.history.pushState({}, '', '/' + dateStr + '.html');
+    render();
+  } else {
+    window.history.pushState({}, '', '/');
+    render();
+  }
+}
+
+// ========== DATE HELPERS ==========
+function formatDateCN(dateStr) {
+  const d = new Date(dateStr + 'T00:00:00');
+  const weekdays = ['日','一','二','三','四','五','六'];
+  return `${d.getMonth()+1}月${d.getDate()}日 周${weekdays[d.getDay()]}`;
+}
+
+function formatDateShort(dateStr) {
+  const d = new Date(dateStr + 'T00:00:00');
+  return `${d.getMonth()+1}.${d.getDate()}`;
+}
+
+// ========== CALENDAR ==========
+function renderCalendar(currentDateStr) {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  
+  const reportDates = new Set(Object.keys(REPORTS));
+  
+  let html = `<div class="cal-month-label">${year}年${month+1}月 <span class="year">${'(W' + String(Math.ceil((new Date(year,month,1) - new Date(year,0,1))/86400000/7 + 1)).padStart(2,'0') + ')'}</span></div>`;
+  html += '<div class="calendar-grid">';
+  
+  ['日','一','二','三','四','五','六'].forEach(d => {
+    html += `<div style="font-family:'Inter',sans-serif;font-size:10px;color:#3d3d52;text-align:center;">${d}</div>`;
+  });
+  
+  for (let i = 0; i < firstDay; i++) {
+    html += '<div class="cal-day other-month"></div>';
+  }
+  
+  for (let day = 1; day <= daysInMonth; day++) {
+    const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    const has = reportDates.has(dateStr);
+    const isActive = dateStr === currentDateStr;
+    const cls = `cal-day${has ? ' has-report' : ''}${isActive ? ' active' : ''}`;
+    if (has) {
+      html += `<a href="/${dateStr}.html" class="${cls}" onclick="event.preventDefault();navigateTo('${dateStr}')">${day}</a>`;
+    } else {
+      html += `<div class="${cls}">${day}</div>`;
+    }
+  }
+  
+  html += '</div>';
+  document.getElementById('calendar').innerHTML = html;
+}
+
+// ========== RECENT LIST ==========
+function renderRecent(currentDateStr) {
+  const sorted = Object.entries(REPORTS).sort((a,b) => b[0].localeCompare(a[0]));
+  let html = '';
+  sorted.forEach(([date, report]) => {
+    const isActive = date === currentDateStr;
+    html += `<a href="/${date}.html" class="recent-item" onclick="event.preventDefault();navigateTo('${date}')" style="${isActive ? 'padding-left:8px;' : ''}">
+      <div class="date">${formatDateCN(date)}</div>
+      <div class="title">${report.title}</div>
+      ${report.audio_file ? '<div class="voice-indicator">语音版</div>' : ''}
+    </a>`;
+  });
+  if (!sorted.length) {
+    html = '<div style="color:#3d3d52;font-size:13px;">暂无日报</div>';
+  }
+  document.getElementById('recent-list').innerHTML = html;
+}
+
+// ========== MAIN CONTENT RENDERERS ==========
+
+// Home page
+function renderHome() {
+  const sorted = Object.entries(REPORTS).sort((a,b) => b[0].localeCompare(a[0]));
+  const latest = sorted[0];
+  
+  let html = `
+    <div class="page-header">
+      <div class="breadcrumb">INDEX</div>
+      <h2>AI 日报</h2>
+      <div class="desc">每日AI行业动态 · 文字 + 语音版</div>
+    </div>
+  `;
+  
+  if (latest) {
+    const [date, report] = latest;
+    html += `
+      <div class="feature-card">
+        <div class="meta">最新 · ${formatDateCN(date)}</div>
+        <h3>${report.headline_title || report.title}</h3>
+        <p>${(report.headline_body || '').substring(0, 120)}${(report.headline_body || '').length > 120 ? '……' : ''}</p>
+        <div class="actions">
+          <a href="/${date}.html" onclick="event.preventDefault();navigateTo('${date}')">阅读全文</a>
+          ${report.audio_file ? `<a href="/${date}.html#player" onclick="event.preventDefault();navigateTo('${date}')">收听语音</a>` : ''}
+        </div>
+      </div>`;
+  }
+  
+  html += '<div style="margin-top:32px;">';
+  sorted.forEach(([date, report]) => {
+    if (latest && date === latest[0]) return; // skip featured
+    html += `
+      <a href="/${date}.html" class="report-card" onclick="event.preventDefault();navigateTo('${date}')">
+        <div class="date">${formatDateCN(date)}</div>
+        <div class="title">${report.title}</div>
+        <div class="summary">${report.headline_title || ''}</div>
+        <div class="tags">${report.sections.slice(0,3).map(s => `<span>${s.name}</span>`).join('')}</div>
+      </a>`;
+  });
+  html += '</div>';
+  
+  if (!sorted.length) {
+    html += '<div class="empty-state"><h3>暂无日报</h3><p>日报正在路上，请明天再来看看</p></div>';
+  }
+  
+  return html;
+}
+
+// Daily report page
+function renderDaily(dateStr) {
+  const report = REPORTS[dateStr];
+  if (!report) return '<div class="empty-state"><h3>日报未找到</h3><p><a href="/" class="back-link" onclick="event.preventDefault();navigateTo(null)">返回首页</a></p></div>';
+  
+  let html = `
+    <a href="/" class="back-link" onclick="event.preventDefault();navigateTo(null)">返回首页</a>
+    <div class="report-page">
+      <div class="report-header">
+        <h1>${report.title}</h1>
+        <div class="meta">${formatDateCN(dateStr)}</div>
+      </div>
+  `;
+  
+  // Voice player
+  if (report.audio_file) {
+    html += `
+      <div class="voice-player" id="player">
+        <button class="play-btn" onclick="toggleAudio('${dateStr}')" id="play-btn-${dateStr}"></button>
+        <div class="player-info">
+          <div class="label">语音版</div>
+          <div class="time" id="time-${dateStr}">点击播放</div>
+        </div>
+        <audio id="audio-${dateStr}" src="${report.audio_file}" preload="none" onended="onAudioEnd('${dateStr}')" ontimeupdate="onTimeUpdate('${dateStr}')"></audio>
+      </div>`;
+  }
+  
+  // Headline
+  html += `
+    <div class="headline-block">
+      <div class="headline-tag">头条</div>
+      <h2>${report.headline_title || ''}</h2>
+      <p>${report.headline_body || ''}</p>
+      ${report.headline_comment ? `<div class="comment">小咪说：${report.headline_comment}</div>` : ''}
+    </div>`;
+  
+  // Sections
+  (report.sections || []).forEach(s => {
+    html += `<div class="section-block"><h3>${s.name}</h3><p>${s.content.replace(/\n/g, '<br>')}</p></div>`;
+  });
+  
+  // Daily Insight
+  if (report.daily_insight) {
+    html += `
+      <div class="insight-block">
+        <h3>今日观察</h3>
+        <p>${report.daily_insight}</p>
+      </div>`;
+  }
+  
+  html += '</div>';
+  return html;
+}
+
+// ========== AUDIO PLAYER ==========
+let currentAudio = null;
+
+function toggleAudio(dateStr) {
+  const audio = document.getElementById('audio-' + dateStr);
+  const btn = document.getElementById('play-btn-' + dateStr);
+  const timeLabel = document.getElementById('time-' + dateStr);
+  
+  if (currentAudio && currentAudio !== audio) {
+    currentAudio.pause();
+    const prevBtn = document.querySelector('.play-btn.playing');
+    if (prevBtn) prevBtn.classList.remove('playing');
+  }
+  
+  if (audio.paused) {
+    audio.play();
+    btn.classList.add('playing');
+    currentAudio = audio;
+    timeLabel.textContent = formatTime(audio.currentTime);
+  } else {
+    audio.pause();
+    btn.classList.remove('playing');
+    currentAudio = null;
+  }
+}
+
+function onAudioEnd(dateStr) {
+  const btn = document.getElementById('play-btn-' + dateStr);
+  const timeLabel = document.getElementById('time-' + dateStr);
+  btn.classList.remove('playing');
+  timeLabel.textContent = '播放结束';
+  currentAudio = null;
+}
+
+function onTimeUpdate(dateStr) {
+  const timeLabel = document.getElementById('time-' + dateStr);
+  const audio = document.getElementById('audio-' + dateStr);
+  timeLabel.textContent = formatTime(audio.currentTime) + ' / ' + formatTime(audio.duration || 0);
+}
+
+function formatTime(sec) {
+  if (!sec || isNaN(sec)) return '0:00';
+  const m = Math.floor(sec / 60);
+  const s = Math.floor(sec % 60);
+  return m + ':' + String(s).padStart(2, '0');
+}
+
+// ========== RENDER ==========
+function render() {
+  const dateStr = getDateFromPath();
+  
+  renderCalendar(dateStr);
+  renderRecent(dateStr);
+  
+  if (dateStr && REPORTS[dateStr]) {
+    document.getElementById('main-content').innerHTML = renderDaily(dateStr);
+  } else if (dateStr && !REPORTS[dateStr]) {
+    document.getElementById('main-content').innerHTML = renderDaily(dateStr); // will show "not found"
+  } else {
+    document.getElementById('main-content').innerHTML = renderHome();
+  }
+}
+
+// ========== INIT ==========
+window.addEventListener('popstate', render);
+render();
+</script>
+</body>
+</html>
