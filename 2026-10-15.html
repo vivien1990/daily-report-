@@ -1,0 +1,1988 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 日报 · 每日归档</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Noto Serif SC','Georgia','Times New Roman',serif;
+  background:#0f0f13;color:#c9c9d0;line-height:1.7;min-height:100vh;
+  background-image:linear-gradient(rgba(40,40,55,0.15) 1px,transparent 1px),linear-gradient(90deg,rgba(40,40,55,0.15) 1px,transparent 1px);
+  background-size:32px 32px
+}
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap');
+.wrapper{display:flex;max-width:1400px;margin:0 auto;min-height:100vh}
+.sidebar{width:320px;min-width:320px;border-right:1px solid rgba(255,255,255,0.06);padding:40px 28px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.sidebar::-webkit-scrollbar{width:4px}
+.sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);border-radius:2px}
+.sidebar-brand{margin-bottom:40px}
+.sidebar-brand h1{font-family:'Inter',sans-serif;font-size:13px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#5a5a6e;margin-bottom:8px}
+.sidebar-brand .sub{font-family:'Inter',sans-serif;font-size:11px;color:#3d3d52;letter-spacing:1px}
+.calendar-nav{margin-bottom:36px}
+.calendar-nav h3{font-family:'Inter',sans-serif;font-size:11px;font-weight:500;letter-spacing:2px;color:#5a5a6e;margin-bottom:16px;text-transform:uppercase}
+.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.cal-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-family:'Inter',sans-serif;font-size:12px;font-weight:400;border-radius:4px;cursor:pointer;transition:all .15s;color:#5a5a6e;background:transparent;text-decoration:none}
+.cal-day:hover{background:rgba(255,255,255,0.04);color:#a8a8b8}
+.cal-day.has-report{color:#c9c9d0;background:rgba(255,255,255,0.04);font-weight:500;border:1px solid rgba(255,255,255,0.06)}
+.cal-day.has-report:hover{background:rgba(180,140,100,0.15);border-color:rgba(180,140,100,0.3);color:#e0c8a8}
+.cal-day.active{background:rgba(180,140,100,0.2);border-color:rgba(180,140,100,0.4);color:#e0c8a8}
+.cal-day.other-month{color:#2a2a3a;pointer-events:none}
+.cal-month-label{font-family:'Inter',sans-serif;font-size:13px;font-weight:500;color:#8a8a9a;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
+.cal-month-label .year{color:#4a4a5e;font-weight:300}
+.recent-list h3{font-family:'Inter',sans-serif;font-size:11px;font-weight:500;letter-spacing:2px;color:#5a5a6e;margin-bottom:16px;text-transform:uppercase}
+.recent-item{display:block;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.04);text-decoration:none;transition:all .15s}
+.recent-item:last-child{border-bottom:none}
+.recent-item:hover{padding-left:8px}
+.recent-item .date{font-family:'Inter',sans-serif;font-size:12px;font-weight:500;color:#b8a898;margin-bottom:4px}
+.recent-item .title{font-family:'Noto Serif SC',serif;font-size:14px;color:#c9c9d0;line-height:1.5}
+.recent-item:hover .title{color:#e0c8a8}
+.recent-item .voice-indicator{display:inline-block;font-size:11px;color:#6a7a6a;margin-top:4px}
+.recent-item .voice-indicator::before{content:"♪ "}
+.main-content{flex:1;padding:40px 48px 60px;max-width:900px}
+.page-header{margin-bottom:48px}
+.page-header .breadcrumb{font-family:'Inter',sans-serif;font-size:11px;color:#4a4a5e;letter-spacing:1px;margin-bottom:12px}
+.page-header h2{font-family:'Noto Serif SC',serif;font-size:28px;font-weight:700;color:#e8e8f0;margin-bottom:8px}
+.page-header .desc{font-size:15px;color:#6a6a7e;line-height:1.6}
+.feature-card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:32px;margin-bottom:24px;transition:all .2s}
+.feature-card:hover{background:rgba(255,255,255,0.03);border-color:rgba(180,140,100,0.15)}
+.feature-card .meta{font-family:'Inter',sans-serif;font-size:11px;color:#5a5a6e;letter-spacing:1px;margin-bottom:12px}
+.feature-card h3{font-family:'Noto Serif SC',serif;font-size:20px;font-weight:600;color:#e0c8a8;margin-bottom:12px;line-height:1.4}
+.feature-card p{font-size:14px;color:#8a8a9a;line-height:1.7;margin-bottom:16px}
+.feature-card .actions{display:flex;gap:12px;align-items:center}
+.feature-card .actions a{font-family:'Inter',sans-serif;font-size:12px;font-weight:500;color:#b8a898;text-decoration:none;padding:6px 16px;border:1px solid rgba(180,140,100,0.2);border-radius:6px;transition:all .15s}
+.feature-card .actions a:hover{background:rgba(180,140,100,0.1);border-color:rgba(180,140,100,0.4);color:#e0c8a8}
+.report-card{display:block;padding:20px 24px;border-bottom:1px solid rgba(255,255,255,0.04);text-decoration:none;transition:all .15s;border-radius:8px}
+.report-card:hover{background:rgba(255,255,255,0.02);padding-left:28px}
+.report-card:last-child{border-bottom:none}
+.report-card .date{font-family:'Inter',sans-serif;font-size:12px;color:#6a6a7e;margin-bottom:4px}
+.report-card .title{font-family:'Noto Serif SC',serif;font-size:16px;font-weight:500;color:#c9c9d0;margin-bottom:6px}
+.report-card:hover .title{color:#e0c8a8}
+.report-card .summary{font-size:13px;color:#6a6a7e;line-height:1.5}
+.report-card .tags{margin-top:8px;display:flex;gap:8px}
+.report-card .tags span{font-family:'Inter',sans-serif;font-size:10px;color:#5a5a6e;padding:2px 8px;border:1px solid rgba(255,255,255,0.06);border-radius:4px}
+.report-page .report-header{margin-bottom:32px;padding-bottom:24px;border-bottom:1px solid rgba(255,255,255,0.06)}
+.report-page .report-header h1{font-family:'Noto Serif SC',serif;font-size:28px;font-weight:700;color:#e8e8f0;margin-bottom:8px}
+.report-page .report-header .meta{font-family:'Inter',sans-serif;font-size:12px;color:#5a5a6e}
+.voice-player{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:16px 20px;margin:24px 0 32px;display:flex;align-items:center;gap:16px}
+.voice-player .play-btn{width:40px;height:40px;border-radius:50%;border:1px solid rgba(180,140,100,0.3);background:rgba(180,140,100,0.08);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
+.voice-player .play-btn:hover{background:rgba(180,140,100,0.15);border-color:rgba(180,140,100,0.5)}
+.voice-player .play-btn::after{content:"▶";font-size:14px;color:#e0c8a8;margin-left:2px}
+.voice-player .play-btn.playing::after{content:"⏸"}
+.voice-player .player-info{flex:1}
+.voice-player .player-info .label{font-family:'Inter',sans-serif;font-size:11px;color:#5a5a6e;margin-bottom:2px}
+.voice-player .player-info .time{font-family:'Inter',sans-serif;font-size:12px;color:#8a8a9a}
+.voice-player audio{display:none}
+.headline-block{margin-bottom:36px;padding:28px;background:linear-gradient(135deg,rgba(180,140,100,0.04),rgba(100,80,60,0.02));border:1px solid rgba(180,140,100,0.1);border-radius:10px}
+.headline-block .headline-tag{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;letter-spacing:2px;color:#b8a898;text-transform:uppercase;margin-bottom:12px}
+.headline-block h2{font-family:'Noto Serif SC',serif;font-size:22px;font-weight:700;color:#e0c8a8;line-height:1.4;margin-bottom:12px}
+.headline-block p{font-size:14px;color:#9a9aaa;line-height:1.8}
+.headline-block .comment{margin-top:16px;padding-top:16px;border-top:1px solid rgba(180,140,100,0.1);font-size:13px;color:#8a8a9a;font-style:italic;line-height:1.6}
+.headline-block .comment::before{content:"—— ";color:#5a5a6e}
+.section-block{margin-bottom:28px;padding:20px 24px;border-left:2px solid rgba(180,140,100,0.1);transition:all .15s}
+.section-block:hover{border-left-color:rgba(180,140,100,0.3)}
+.section-block h3{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;color:#7a7a8e;text-transform:uppercase;margin-bottom:8px}
+.section-block p{font-size:14px;color:#9a9aaa;line-height:1.8}
+.insight-block{margin-top:40px;padding:24px 28px;background:rgba(180,140,100,0.03);border:1px solid rgba(180,140,100,0.1);border-radius:10px}
+.insight-block h3{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;letter-spacing:3px;color:#b8a898;text-transform:uppercase;margin-bottom:12px}
+.insight-block p{font-size:14px;color:#b8a898;line-height:1.8;font-style:italic}
+.back-link{display:inline-block;font-family:'Inter',sans-serif;font-size:12px;color:#5a5a6e;text-decoration:none;margin-bottom:24px;transition:color .15s}
+.back-link:hover{color:#b8a898}
+.back-link::before{content:"← "}
+.empty-state{text-align:center;padding:80px 40px;color:#4a4a5e}
+.empty-state h3{font-family:'Noto Serif SC',serif;font-size:20px;color:#6a6a7e;margin-bottom:8px}
+.empty-state p{font-size:14px}
+@media(max-width:900px){
+  .wrapper{flex-direction:column}
+  .sidebar{width:100%;min-width:auto;height:auto;position:static;padding:24px 20px}
+  .main-content{padding:24px 20px 40px}
+  .calendar-grid{max-width:280px}
+}
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand"><h1>AI 日报</h1><div class="sub">每日归档 · 文字+语音</div></div>
+    <div class="calendar-nav" id="calendar-nav"><h3>日历</h3><div id="calendar"></div></div>
+    <div class="recent-list"><h3>最近</h3><div id="recent-list"></div></div>
+  </aside>
+  <main class="main-content" id="main-content"></main>
+</div>
+<script>
+// Base path: detect sub-path deployment (e.g. /daily-report-/)
+// Simply take everything before the last slash in the current URL path
+(function(){var p=window.location.pathname,i=p.lastIndexOf("/");window.BP=i>=0?p.substring(0,i+1):"/";})();
+
+const REPORTS = {
+  "2026-06-05": {
+    "date": "2026-06-05",
+    "title": "AI 早报 | 6月5日",
+    "headline_title": "DeepSeek首轮融资500亿，估值冲向590亿美元",
+    "headline_body": "DeepSeek启动成立以来首轮外部融资，拟筹资约500亿元人民币（~70亿美元），投后估值3500-4000亿元。腾讯拟投100亿，宁德时代50亿，梁文锋个人出资200亿保持超80%控制权。与此同时，腾讯云率先将DeepSeek-V4系列API价格下调最高97.5%，模型价格战进一步白热化。",
+    "headline_comment": "从不融资的DeepSeek终于开门接钱了，而且一出手就是中国AI史上最大单笔融资。这钱不是去烧参数，是去建算力生态——跟华为昇腾的深度绑定才是真正值得看的暗线。",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "Seedance 2.0单月营收突破10亿元，仍在爬升期，字节已将火山引擎MaaS全年目标上调至150亿元。可灵AI一季度营收6.5亿元，正推进Pre-IPO轮融资，投前估值180亿美元，计划2027年初港股上市，但面临\"缺云\"困境——没有字节、阿里那样的云生态反哺。中文在线披露，AI短剧已成为国内第一大Token消耗场景。| 36氪·智能涌现 | 新浪科技"
+      },
+      {
+        "name": "出海·全球化",
+        "content": "2026出海全球化百人论坛（GGF2026）定档6月11日上海，主题\"韧性全球化 AI向未来\"。阿里千问宣布向第三方Agent/Skill全面开放，肯德基、瑞幸、蜜雪冰城等首批接入品牌Agent。TikTok Shop欧洲扩张持续推进，中国AI短剧出海收入2025年达23.8亿美元。| 36氪 | IT之家"
+      },
+      {
+        "name": "行业要闻",
+        "content": "MiniMax发布第三代旗舰模型M3，自研稀疏注意力架构MSA，首次同时集齐「前沿Coding+1M超长上下文+原生多模态」三项能力。黄仁勋在Computex 2026宣布英伟达联手联发科推出RTX Spark超级芯片，可在笔记本本地运行1200亿参数模型。| 经济参考报 | 极客公园"
+      },
+      {
+        "name": "速览",
+        "content": "• 中文在线：AI短剧成为第一大Token消耗场景，占比居首 | 艾媒\n• 微软Build大会发布自研编程模型MAI-Code-1-Flash | CNBC\n• Anthropic秘密提交IPO申请，估值已超9650亿美元 | 证券时报\n• 上海推出\"AI+微短剧\"中试基地及产业\"沪8条\"扶持政策 | 财联社\n• 可灵被曝Seedance 2.0收入碾压（10亿/月 vs 6.5亿/季度），价格战加速 | 36氪·市象"
+      }
+    ],
+    "daily_insight": "Seedance 2.0单月10亿 vs 可灵一季度6.5亿——AI视频的商业化差距不是在缩小，而是在拉大。决定胜负的已经不单是模型能力，而是谁能把模型嵌进更大的生态里：字节有抖音+火山云，阿里有电商+阿里云，可灵缺的正是一朵能遮风挡雨的云。",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-06-05.mp3"
+  },
+  "2026-06-06": {
+    "date": "2026-06-06",
+    "title": "AI 早报 | 6月6日",
+    "headline_title": "可灵AI两周年交卷：1亿用户、5万企业客户",
+    "headline_body": "6月6日是可灵AI上线两周年，官方宣布全球用户突破1亿，企业客户近5万家，单季营收超6.5亿元，ARR已接近5亿美元。与此同时，可灵正以180亿美元投前估值进行Pre-IPO轮融资，内部按2027年初递交港股上市材料推进。| IT之家、新浪科技",
+    "headline_comment": "两年前可灵还是\"吃面视频\"惊艳全球的技术demo，现在已经是年化5亿美元的真实生意了——AI视频的工业化时代，真的来了。",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "本周多条线索确认AI短剧已进入\"量产爆发期\"。2026年Q1全行业上线微短剧约12.8万部，其中AI短剧占比超95%。字节Seedance 2.0仍在视频生成赛道保持领先，36氪独家透露字节2026年的重点之一是维持Seedance全球SOTA地位，同时探索\"动态生成\"新方向。5月底戛纳电影节上，多部AI短剧首次登上官方展映单元。| 21世纪经济报道、36氪、财联社"
+      },
+      {
+        "name": "出海·全球化",
+        "content": "霞光智库最新报告显示，2025年Q2至2026年Q1，生成式AI赛道以232%的同比增速、超44亿美元的收入增量领跑全球非游应用市场。中美顶级AI模型性能差距已从17.5%收窄至2.7%，中国日均Token调用量飙升至140万亿级。| 霞光智库、21世纪经济报道"
+      },
+      {
+        "name": "行业要闻",
+        "content": "🔸 DeepSeek启动首轮融资：拟筹资500亿元人民币，估值3500-4000亿元。梁文锋个人出资200亿，腾讯拟投100亿，宁德时代拟投50亿，网易、京东等在洽谈。| 路透社、科创板日报\n\n🔸 大模型IPO扎堆：智谱宣布A股科创板上市，拟募资150亿元；MiniMax M3模型发布同时启动A股IPO辅导；Anthropic秘密提交美股IPO申请，估值达9650亿美元。| TechWeb、证券时报"
+      },
+      {
+        "name": "速览",
+        "content": "• 微软发布自研AI编程模型MAI-Code-1-Flash，减少对OpenAI依赖 | 新浪财经\n• MiniMax发布M3旗舰模型：国内首个集编程Agent能力、1M上下文、原生多模态于一体 | 证券时报\n• 新通教育与36氪研究院将联合发布《赢在2030：AI时代留学就业白皮书》 | 中华网\n• Gartner预测：到2026年75%的新增风投资金将流向AI原生公司 | 36氪\n• 字节AI曝光2026年四大命题：世界模型、强化Coding、守住Seedance SOTA、探索动态生成 | 36氪"
+      }
+    ],
+    "daily_insight": "这一周感觉像是AI行业\"按下了快进键\"——可灵两周年交卷、DeepSeek开门融资、Anthropic秘密递表、智谱MiniMax双双回A。但热闹之下，一个关键问题还没人回答：当AI短剧已经占95%的供给、当各家公司都在冲刺上市，到底谁先真正让用户\"愿意付钱\"？这可能比谁先IPO更重要。",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-06-06.mp3"
+  },
+  "2026-06-07": {
+    "date": "2026-06-07",
+    "title": "AI 早报 | 6月7日",
+    "headline_title": "可灵AI分拆独立融资·估值直逼母公司",
+    "headline_body": "快手旗下可灵AI启动分拆独立融资，投前估值达180亿美元，相当于母公司快手市值的67%。可灵Q1营收超6.5亿元，ARR已飙至近5亿美元。但消息传出后快手股价不涨反跌，市场在问：AI视频的商业模式到底撑不撑得起这个价？",
+    "headline_comment": "可灵是AI视频赛道第一个交出财报成绩单的选手，但180亿美元估值的账，需要更多海外付费用户和B端大单来还。有意思的是字节和阿里的视频模型还在后面追，这场仗才刚开始。",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "Q1全行业上线AI微短剧约12.2万部，占比已超95%，平均每天1300+部AI短剧上线。字节漫剧日token消耗突破7000万元，首次超过真人短剧。AI短剧《波斯复仇记》在YourChannel平台72小时GMV达50万美元，成本仅3000元，成为\"一人公司\"出海标杆案例。| 中国网络视听协会 36氪"
+      },
+      {
+        "name": "出海·全球化",
+        "content": "TikTok Q1 AI短剧分账超200万美元，季度增幅超6倍，并推出独立短剧App PineDrama主打北美市场。阅文正式推出海外漫剧平台ToonScroll，计划年内上线超千部漫剧。DataEye预计2026年全球AI短剧市场规模将达6.5亿美元，同比增长6倍。| 36氪 娱乐资本论"
+      },
+      {
+        "name": "AI教育·培训",
+        "content": "教育部等五部门印发《\"人工智能+教育\"行动计划》，明确到2030年AI与教育深度融合格局基本形成，中小学全面普及AI通识教育。同时，斯坦福HAI刚结束AI+教育峰会，探讨AI在K-12和高校中的落地路径，中美在AI教育政策上同步加速。| 教育部 Stanford HAI"
+      },
+      {
+        "name": "行业要闻",
+        "content": "• Alphabet宣布800亿美元融资计划（含ATM、承销发行及向伯克希尔定向增发），全部用于AI基础设施建设。CEO称\"AI需求已超出供应能力\"。| 经济观察网\n\n• 特朗普公开表示考虑美国政府入股AI企业（包括OpenAI），让公众分享AI产业红利，计划下周召集AI高管开会讨论。| 财联社"
+      },
+      {
+        "name": "速览",
+        "content": "• Supabase完成5亿美元F轮融资，开源数据库赛道持续升温 | 亿欧\n• AI编程工具Lovable洽谈120亿美元估值新一轮融资 | 市场消息\n• Quantinuum完成超额认购IPO，量子计算+AI融合加速 | 量子位\n• Google I/O 2026重点：Gemini全生态升级，AI芯片与算力基础设施大幅扩 | 开源中国\n• 6月1-5日投融资密集：VAST（3D世界模型）近2亿美元、星源智（世界模型）10亿元 | 腾讯新闻"
+      }
+    ],
+    "daily_insight": "AI短剧日更1300部的时代，产能已经不是问题，问题是\"精品率\"跌到了1/1000。当平台分成在往上调、创作工具在往下压成本，真正稀缺的不是模型能力，而是\"懂故事、懂人性、懂海外观众\"的复合型创作者。这个窗口期可能比我们想的要短。",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-06-07.mp3"
+  },
+  "2026-06-08": {
+    "date": "2026-06-08",
+    "title": "AI 早报 | 6月8日",
+    "headline_title": "Kimi估值半年飙6倍·300亿美元刷新纪录",
+    "headline_body": "6月8日，月之暗面旗下Kimi被曝开启新一轮融资，投前估值达300亿美元，较2025年底43亿美元暴涨近6倍。Kimi ARR已突破2亿美元，付费订阅和API调用双双加速。但月活用户从3600万峰值跌至833万，C端和B端双重承压下，高估值能否持续成为市场焦点。",
+    "headline_comment": "半年从43亿到300亿美元，Kimi成了国内大模型估值飙升最快的选手。但商业化还在早期，高昂的Token成本和字节豆包3.5亿月活的碾压，让这个价格更像是在赌未来而不是买现在。",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "Runway发布Characters实时视频生成功能，基于GWM-1模型实现单张图片生成可对话的虚拟角色，音频驱动表情和口型同步。AI短剧出海持续升温：成本仅3000元的《波斯复仇记》在海外平台72小时GMV达50万美元，阅文推出海外漫剧平台ToonScroll计划年内上线超千部。| 投资界 Releasebot"
+      },
+      {
+        "name": "出海·全球化",
+        "content": "TikTok Q1 AI短剧分账超200万美元，环比增长300%，季度增幅超6倍，TikTok已将短剧升级为主站一级内容品类。DataEye数据显示，2026年海外AI短剧市场规模预计达6.5亿美元，同比增长6倍。字节系PineDrama、阅文ToonScroll、点众DramaBox等纷纷加码，点众更拿出1.5亿美元专项预算押注AI仿真人短剧出海。| 澎湃 36氪"
+      },
+      {
+        "name": "行业要闻",
+        "content": "• DeepSeek正式发布V4 Pro模型，宣称精确度超越GPT-5.5 Pro，中国开源模型在高端推理能力上逼近头部闭源模型。此前DeepSeek已将V4 Pro永久降价75%，以性价比策略冲击全球市场。| 掘金\n\n• 苹果WWDC 2026于6月8日开幕，预计iOS 27将支持本地运行更大模型，Siri或升级为独立应用并支持切换第三方模型。被Google和微软在AI领域拉开差距的苹果，正面临证明AI竞争力的关键时刻。| 掘金 新浪科技"
+      },
+      {
+        "name": "速览",
+        "content": "• 云知声发布U2大模型，近3000亿MoE参数，提出\"智能密度\"新维度质疑参数竞赛 | 新浪科技\n• 英伟达与LG集团合作建设AI工厂，覆盖机器人、自动驾驶、数据中心等领域 | 财联社\n• 高考期间AI搜题功能被限时\"上锁\"，夸克、腾讯等转战AI志愿填报赛道 | 新浪科技\n• Notion\"封禁Anthropic\"12小时后紧急澄清为乌龙，折射平台与模型供应商权力博弈 | 掘金\n• 1290万考生迎2026高考，AI志愿填报Agent成各大厂商新战场 | 新浪科技"
+      }
+    ],
+    "daily_insight": "Runway的虚拟角色+AI短剧的成本降到3000元赚50万美元，这条\"一人公司\"出海路径正变得越来越真实。但坏消息是，当连阅文和字节都在拼命铺AI短剧产能，赛道拥挤的速度远快于商业模式成熟的速度——窗口期可能比想象中短得多。",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-06-08.mp3"
+  },
+  "2026-06-09": {
+    "date": "2026-06-09",
+    "title": "AI 早报 | 6月9日",
+    "headline_title": "Kimi估值飙至300亿美元·半年翻6倍",
+    "headline_body": "6月8日，大模型独角兽Kimi（月之暗面）被曝开启新一轮融资，投前估值达300亿美元。这是Kimi半年内第三轮融资，估值从去年12月的43亿美元一路飙升。其ARR在4月突破2亿美元，K2.6模型在代码和Agent能力上持续突破。",
+    "headline_comment": "Kimi这波涨法，几乎是一月翻一倍。但300亿美元估值的账，最终要靠K2.6模型在B端Agent落地和海外开发者生态来还——毕竟ARR破2亿美金只是一个开始。",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "人民日报6月9日刊文指出，2026年上线AI微短剧已达20万部，AI仿真人短剧视觉质感已接近实拍，广电总局发布“微短剧精品创作传播‘五个一批工程’”，要求善用AI降本增效、赋能精良制作。字节火山剧创1.0正式上线，深度适配Seedance 2.0，将制作周期缩短80%以上，并支持企业级资产管理和团队协作。| 人民日报 火山引擎"
+      },
+      {
+        "name": "出海·全球化",
+        "content": "EqualOcean主办的2026出海全球化百人论坛（GGF2026）将于6月11日在上海举行，主题“韧性全球化 AI向未来”，聚焦AI+出海的组织能力与品牌重构。6月9日，“北京-卡塔尔”投资合作高峰洽谈会在京举办，卡塔尔正以AI、数字经济等领域吸引中国企业出海。蚂蚁集团6月8日推出海外AI支付解决方案AMP协议，填补AI Agent自主支付的标准空白。| 36氪 量子位"
+      },
+      {
+        "name": "AI内容生产",
+        "content": "火山剧创1.0深度联动Seedance 2.0和Seedream 5.0 lite，实现“导演级控片”能力。字节2026年AI四大关键命题曝光：世界模型对标Google Genie 3、强化Coding能力、维持Seedance全球SOTA地位、探索“动态生成”新方向。字节漫剧日token消耗已突破7000万元，首次超过真人短剧。| 36氪 火山引擎"
+      },
+      {
+        "name": "AI教育·培训",
+        "content": "黑马程序员联合传智AI于6月9日晚发布2026夏季新课，首次系统梳理AIGC、VibeCoding与具身智能下的开发者能力进化图谱。香港理工大学AIinLT 2026国际AI语言教育峰会（6月21-24日）开放报名，聚焦生成式AI在语文教学中的落地应用。| 黑马程序员 香港理工大学"
+      },
+      {
+        "name": "行业要闻",
+        "content": "• DeepSeek正式发布V4 Pro模型，宣称在精确度上超越GPT-5.5 Pro，同时宣布永久降价75%——“能力接近+价格腰斩”策略加速冲击全球市场。| 稀土掘金\n\n• 苹果WWDC 2026于6月8日开幕，核心看点：Siri升级为独立App并支持切换第三方模型（Gemini/ChatGPT），iOS 27增强端侧AI能力。库克卸任前的AI救赎首秀，华尔街高度关注。| 新浪科技"
+      },
+      {
+        "name": "速览",
+        "content": "• 2026新一代AI创业创新大赛深圳启动，设AI大模型、具身智能、AI+文化、AI Infra四大赛道 | 量子位\n• MiniMax启动科创板IPO，与中信证券签辅导协议，目标“A+H”双平台上市 | 新浪财经\n• 国家数据局首次系统部署行业高质量数据集建设，填补AI数据基础设施空白 | 科创板日报\n• 英伟达与斗山集团扩大合作，覆盖物理AI、机器人及AI工厂基础设施 | 财联社\n• 高德发布全球首个3D原生城市世界模型ABot-Earth0.5，覆盖190+国家和地区 | 新浪科技"
+      }
+    ],
+    "daily_insight": "20万部AI微短剧已上线，日token消耗首超真人——AI短剧的“奇点”已经跨过。但人民日报点出了一个核心问题：还没出现真正出圈、深入人心的标志性剧目。接下来的竞争不再是“能不能生成”，而是“能不能讲出好故事”——这恰恰是模型做不到、只有人能做到的事。",
+    "audio_file": "audio/2026-06-09.mp3"
+  },
+  "2026-06-10": {
+    "date": "2026-06-10",
+    "title": "AI 早报 | 6月10日",
+    "headline_title": "Apple WWDC 2026：Siri AI 王者归来，用 Gemini 驱动全新苹果智能",
+    "headline_body": "时隔两年，苹果终于在 WWDC 上端出了重构后的 Siri AI——基于 Google Gemini 的 1.2 万亿参数模型，拥有独立 App、读写邮件/照片/文件的能力、屏幕感知与跨 App 操作，同时保留了端侧模型的隐私方案。苹果每年支付 Google 约 10 亿美元模型授权费，iCloud+ 用户可获优先访问权。这是苹果在 AI 时代最激进的一次战略转向。",
+    "headline_comment": "苹果这步棋很务实——不打「自研大模型」的牌，直接用最好的成熟模型+自己的生态护城河。对 AI 内容创作者来说，Siri AI 的跨 App 操作能力可能比什么文生图都实用，因为真正的效率是「帮我找到上周拍的素材、自动剪成15秒、发到小红书」。",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "红果短剧累计下架超万部低质 AI 剧，行业从「拼产能」转向「拼品质」。AI 短剧已占微短剧总量的 95%，但爆款率不足 4%。Seedance 2.0 仍一家独大，但涨价（月卡从 299 涨至 499 元）和「降智」问题让创作者叫苦。阿里 HappyHorse 1.0 登顶评测榜后 API 全面开放，720P 视频仅 0.44 元/秒，正在疯狂抢客。| 新华网 界面新闻"
+      },
+      {
+        "name": "出海·全球化",
+        "content": "TikTok 短剧 4 月单月分账破 1500 万美元（约 1 亿人民币），其中 AI 短剧分账超 200 万美元、环比涨 300%。2026 海外 AI 漫剧市场预计达 6.5 亿美元，同比增长 6 倍。中美 AI 模型性能差距已缩至 2.7%，中国 OpenRouter 周 token 调用量连续六周超美国。| 36氪 虎嗅"
+      },
+      {
+        "name": "AI教育·培训",
+        "content": "智谱与合肥工业大学开设「大模型创新实验班」，覆盖本硕博，面向多模态大模型、智能体等方向——大模型企业面向高校规模化开设「实验班」尚属首次。Stanford 2026 AI Index 揭示：超 80% 学生用 AI 做作业，但仅 6% 教师清楚学校 AI 使用政策。| 界面新闻 Stanford HAI"
+      },
+      {
+        "name": "行业要闻",
+        "content": "• Anthropic 发布 Fable 5：Mythos 级最强模型首次面向普通订阅用户，配备安全阀门机制——检测到网络/生物安全等风险话题时自动降级到 Opus 4.8。SWE-bench Pro 得分 80.3%。| 稀土掘金\n\n• OpenAI 已向 SEC 秘密提交 S-1，正式启动 IPO，估值 8520 亿美元。同周期 Anthropic 也递交了 IPO 申请，SpaceX 6 月 12 日挂牌，AI 三巨头 IPO 浪潮全面成型。| 钛媒体"
+      },
+      {
+        "name": "速览",
+        "content": "• 美团 AI 原生浏览器 Tabbit 1.0 正式上线，内置 DeepSeek 等多家大模型 | 界面新闻\n• 月之暗面 Kimi 被曝寻求 20 亿美元新融资，估值达 300 亿美元 | 新浪科技\n• 华为昇腾 910C 完成 1.6 万亿参数大模型训练，国产算力首次迈入「训练级」 | 爱合伙\n• 腾讯联合华为、小米开放微信 A2A 助手接口，手机语音助手可直接发起视频通话 | 爱合伙\n• DeepSeek 登顶美国企业支出管理平台 Ramp 6 月趋势榜，美企降本增效转向中国模型 | 新浪科技"
+      }
+    ],
+    "daily_insight": "这周有三个信号值得连起来看：OpenAI 和 Anthropic 前后脚提交 IPO → 苹果用 Gemini 而非自研模型驱动 Siri → DeepSeek 在美企降本榜单登顶。AI 行业正在从「讲故事」切换到「算账模式」：谁的成本低、谁能交付实际价值、谁能形成付费闭环，谁才能活到下一轮。对 AI 视频/教育/出海赛道的从业者来说，「模型能力」正在变成标配，「理解场景」和「搞定分发」才是护城河。",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-06-10.mp3"
+  },
+  "2026-06-11": {
+    "date": "2026-06-11",
+    "title": "AI 早报 | 6月11日",
+    "headline_title": "Anthropic发布Claude Fable 5·Mythos级最强模型首向公众开放",
+    "headline_body": "6月9日，Anthropic正式发布Claude Fable 5，这是其Mythos级模型首次面向普通用户开放。在SWE-bench编程测试中得分80.3%，超越GPT-5.5近22个百分点；Stripe实测一天完成5000万行代码迁移，相当于人类团队两个月工作量。但定价不菲——输入10美元/输出50美元每百万token，6月23日后从订阅计划移除、转为按token计费，最强AI能力的普惠窗口正在收窄。",
+    "headline_comment": "Fable 5对AI内容生产赛道有两层意义：一是AI Agent能力大跃升，编剧、分镜、代码等长链条任务将更快被AI接管；二是按token计费意味着创作者要开始精算AI成本了，粗放使用最强模型的日子不多了。",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "AI短剧赛道遭遇收益寒冬。据21世纪经济报道，红果短剧万播收益从百元断崖式跌至5-10元，千万播放量也难覆盖成本，大批中小工作室停更撤场。行业数据显示AI漫剧爆款率仅0.16%，90%非头部公司亏损或白忙活。产能从日产1300部狂奔到万播收益跌至个位数，仅用了半年。| 21世纪经济报道 数智前线"
+      },
+      {
+        "name": "出海·全球化",
+        "content": "TikTok Q1 AI短剧分账超200万美元，环比增长超300%；阅文海外漫剧平台ToonScroll计划年内上线超千部；中文在线旗下FlareFlow注册用户超3300万。DataEye预计2026年全球AI短剧市场规模达6.5亿美元，同比增长6倍。业内人士判断：海外面孔、中国生产的新格局未来两年有望成型。| 36氪 镜象娱乐"
+      },
+      {
+        "name": "AI内容生产",
+        "content": "AI短剧协作平台AniShort（八点八数字）完成近亿元融资，创2026年国内AI短剧工具类最大单笔融资纪录。平台集成Seedance2.0、Gemini等模型，已实现日产短剧超5000分钟、综合成本降低85%，企业用户付费转化率高达64.8%。AI短剧工具赛道正从卖铲子变成一门正经生意。| 36氪"
+      },
+      {
+        "name": "AI教育·培训",
+        "content": "教育部等五部门《人工智能+教育行动计划》持续落地——北京提出培育不低于10个千万级用户AI教育产品，福建印发数智赋能教育实施方案。2026年基础教育重点工作明确：推动人工智能进入中小学课程标准、日常教学和考试评价。同时，国家智慧教育平台AI培训覆盖130万大学生，全国各地密集开展教师AI素养轮训。| 教育部 中国教育在线"
+      },
+      {
+        "name": "行业要闻",
+        "content": "• OpenAI正式提交IPO申请，目标估值1万亿美元，月营收20亿美元但预计2030年前无法盈利。与Anthropic、SpaceX形成三大超级AI IPO浪潮，合计估值超3.5万亿美元。| 华尔街见闻\n\n• 字节跳动AI制药业务线启动拆分与独立融资，已发布全球首个用小分子阻断IL-17家族3个二聚体的成果，代表AI for Science产业化加速。| 36氪"
+      },
+      {
+        "name": "速览",
+        "content": "• 微信朋友圈搜索全面开放，AI Agent生态开始接入开发者 | 爱范儿\n• MiniMax启动A股IPO辅导，与智谱争当A+H双上市大模型企业 | 中国工业新闻网\n• Kimi开启新一轮融资，投前估值300亿美元，半年增长6倍 | 雷锋网\n• 工信部、国资委联合推进人形机器人实景实训，目标年底万台级规模 | 华尔街见闻\n• 国家互联网应急中心预警：部分AI智能体Skills存在越狱攻击与挖矿风险 | 钛媒体"
+      }
+    ],
+    "daily_insight": "AI短剧从日产1300部的疯狂扩张到万播收益跌至个位数，只用了半年。当产能不再是壁垒，谁能讲好故事加上谁能控好成本成了唯一的分水岭。工具越来越强（AniShort融资、Fable 5发布），但AI短剧赚钱的逻辑回到了最朴素的原点——好内容。对出海玩家来说，与其卷国内这5块钱的万播收益，不如认真看看TikTok那200万美元的分账蛋糕。",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-06-11.mp3"
+  },
+  "2026-06-12": {
+    "date": "2026-06-12",
+    "title": "AI 早报 | 6月12日",
+    "headline_title": "OpenAI降价博弈·AI支付时代来了",
+    "headline_body": "华尔街日报6月10日报道，OpenAI正考虑大幅削减Token价格以应对Anthropic竞争和客户成本压力——奥特曼直言成本已成“严重问题”。同一天，OpenAI与Visa官宣合作，让AI智能体在用户授权后可自主完成网络下单与支付。与此同时甲骨文财报显示，其6380亿美元履约义务中超50%来自OpenAI合同。一边烧钱抢市场一边准备降价抢份额，AI商业化的“白刃战”已经打响。",
+    "headline_comment": "OpenAI降价对AI视频生成赛道是个潜在利好——如果视频模型的token成本也跟跌，中小短剧团队的成本压力会小很多。但Visa的AI支付合作更值得关注：如果AI Agent能自主花钱买服务，那AI内容生产工具的付费闭环就打通了。",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "字节Seedance 2.0 API正式面向企业开放公测，企业客户需签100万保底协议并自行负责版权。火山引擎定价约1元/秒，已与华策、柠萌、阅文等头部公司建立合作。即梦一季度月活1352.5万稳居视频生成赛道首位，但近期限流提价引发了用户反弹。红果短剧启动低质AI短剧专项治理，已回查下架超万部，行业从“野蛮生长”进入“精品筛选”阶段。| 36氪 财经天下"
+      },
+      {
+        "name": "出海·全球化",
+        "content": "中国AI硬件公司Plaud在日本市场爆发：Q1 App内购收入环比激增475%至近1800万美元，日本活跃用户已超美国跃居全球第一。Plaud以“AI秘书”定位精准切入日本职场会议纪要场景，3月发布新品NotePin S。此外，速卖通6月11日在美国、法国等五国推出本地配送，物流成本降10-20%，时效从5天缩至3天。| 36氪 界面新闻"
+      },
+      {
+        "name": "AI内容生产",
+        "content": "AI短剧工业化生产加速：头部案例《万兽独尊》5人8天完成60集，单集算力成本仅千元级。但行业隐忧浮现——从业者反映Seedance 2.0近期出现“降智”现象，同样提示词质量大不如前；红果平台下架超万部低质AI剧，精品率仅千分之一。百度度加推出一站式AI创作平台，支持剧本、分镜、配音全流程AI化。| 36氪 人民日报"
+      },
+      {
+        "name": "AI教育·培训",
+        "content": "教育部推进“人工智能+教育”行动，明确2026年推动AI进入中小学课程标准、日常教学和考试评价。香港教育大学6月17-18日将举办AI4EDU人工智能与教育论坛，覆盖K-12全学科AI应用。复旦大学已开设逾百门AI课程，推出41个“X+AI”双学士学位项目，1.3万余人次修读。| 中国教育网 教大官网"
+      },
+      {
+        "name": "行业要闻",
+        "content": "• Kimi估值飙升至300亿美元，半年暴增6倍，Kimi Work本地Agent开启公测。Q1 ARR已破1亿美元，Q2增长至超2亿美元。| 证券时报 每日经济新闻\n\n• 苹果WWDC26：Siri AI大幅升级（基于谷歌Gemini），CoreAI端侧推理引擎速度较MLX提升2.47倍，但股价当日下跌1.89%。| 36氪"
+      },
+      {
+        "name": "速览",
+        "content": "• 亚马逊发布Graviton5 CPU，192核，Meta签约数千万颗用于AI Agent项目 | Edge AI Daily\n• Anthropic撤销Claude Fable5隐蔽限制竞争对手政策并公开道歉 | 钛媒体\n• Cyera接近完成3亿美元融资，AI数据安全估值飙至120亿美元 | TechCrunch\n• 工信部发布AI+信息通信三年实施意见，天基计算网络首次写入政策 | 36氪\n• 甲骨文AI履约义务6380亿美元同比激增363%，但资本支出也大增162% | 钛媒体"
+      }
+    ],
+    "daily_insight": "红果下架超万部AI短剧是一个信号：当行业日更1300+部短剧时，“能不能做”已经不再是问题，“能不能做好”才是。OpenAI这波降价如果传导到视频模型侧，中小团队的制作成本会继续下探，但平台对内容质量的筛选只会越来越严——会讲故事的人，比会省token的人更值钱。",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-06-12.mp3"
+  },
+  "2026-06-13": {
+    "date": "2026-06-13",
+    "title": "AI 早报 | 6月13日",
+    "headline_title": "智源发布世界模型「悟界」· AI加速走向物理世界",
+    "headline_body": "2026第八届北京智源大会6月12日开幕，智源研究院发布了通用世界基座模型——悟界·Physis-v0.1。院长王仲远指出，AI正沿着「大语言模型→多模态大模型→世界模型」方向演进，加速从数字世界迈向物理世界。同场还透露，AI不再只是聊天工具，正深入与硬件结合、执行具体任务。",
+    "headline_comment": "世界模型是AI从「看懂世界」到「理解世界」的关键一步，对AI视频/短剧来说意味着未来模型不只是生成画面，而是能真正「理解」角色动机、物理规律和叙事逻辑——这对提升AI短剧的精品率是个长期利好。",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "字节漫剧日token消耗突破7000万元，首次超过真人短剧，AI短剧日更量已达1300+部。Seedance 2.0参与制作的8部AI影片在戛纳电影节展映，含全球首部95分钟AI电影《Hell Grind》。谷歌I/O 2026发布Gemini Omni视频生成模型，AI视频赛道竞争进一步白热化。| 财联社 澎湃"
+      },
+      {
+        "name": "出海·全球化",
+        "content": "TikTok短剧4月单月分账突破1500万美元，其中AI短剧分账超200万美元、环比增长超300%。里约网络峰会（6月8-11日）吸引1500+初创参与，AI商业落地成焦点。霞光智库报告显示，2025Q2-2026Q1生成式AI赛道全球收入增量超44亿美元，同比增232%，中国AI出海正从「工具出海」迈向「生态出海」。| 36氪 霞光智库"
+      },
+      {
+        "name": "AI内容生产",
+        "content": "智源大会期间，多家机构展示AI全流程创作工具最新进展。当前AI漫剧从剧本到成片的生产周期已压缩至3-5天，单部算力成本最低千元级。OpenClaw等Agent框架大火，未来AI视频创作可能由Agent调用标准化Skill完成全流程，不再依赖人工逐帧操作。行业观察：工具在进化，但「懂故事」的复合型人才仍是最稀缺资源。| 机器之心 澎湃"
+      },
+      {
+        "name": "AI教育·培训",
+        "content": "传智教育6月9日举办夏季AI新品课程发布会，推出覆盖AI应用与AI开发两大赛道的全品类AI课程矩阵，包含AI视频创作、漫剧特训营等品类。香港教育局6月密集推进AI教育师资培训。世界经济论坛揭晓2026技术先锋名单，10家中国初创入选，AI基础设施与Agent成为两大主线。| 传智教育 世界经济论坛"
+      },
+      {
+        "name": "行业要闻",
+        "content": "• Kimi（月之暗面）新一轮融资估值飙至300亿美元，半年暴增6倍。Kimi Work本地Agent已开启公测，可直接操作用户电脑完成文档、表格等任务。| 证券时报\n\n• DeepSeek首轮外部融资预计筹资约500亿元人民币，估值最高可达4000亿元，腾讯和宁德时代将成为最大外部投资者。| 路透社 新浪财经"
+      },
+      {
+        "name": "速览",
+        "content": "• 智源大会发布悟界世界模型、BAAIGenius Agent框架等多项成果 | 智源\n• 人形机器人企业宇树科技科创板IPO过会，估值420亿元 | 证券时报\n• 世界经济论坛揭晓2026技术先锋，10家中国企业入选 | WEF\n• 广州「十五五」规划：全力推进AI、半导体、低空经济等重大项目 | 广州商务局\n• 密码+AI融合创新发展产业联盟在上海成立 | 人民财讯"
+      }
+    ],
+    "daily_insight": "这周两个信号值得关注：一是智源发布世界模型，意味着AI正从「生成像素」进化到「理解物理世界」，这对AI视频赛道的长期价值巨大；二是Kimi和DeepSeek的融资与估值大火，说明资本对AI的押注不但没降温，反而在加速向头部集中。对做AI视频/教育/出海的人来说，工具红利还在，但差异化红利窗口正在收窄——想办法构建自己的IP壁垒和垂直领域know-how，才是长期生存之道。",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-06-13.mp3"
+  },
+  "2026-06-14": {
+    "date": "2026-06-14",
+    "title": "AI 早报 | 6月14日",
+    "headline_title": "AniShort斩获近亿元融资·AI短剧工具赛道升温",
+    "headline_body": "八点八数字旗下AI短剧协作平台AniShort完成近亿元融资，创2026年国内AI短剧工具类产品最大单笔融资纪录。平台日产短剧超5000分钟、完整短剧40部以上，付费转化率高达64.8%，单月订阅收入近千万元。创始人耿广星称将重点投入智能体研发与全球市场拓展，剑指全球AI短剧工具赛道领导者。",
+    "headline_comment": "AI短剧已经从「能不能做」到了「怎么做更快更省」的阶段，工具层的军备竞赛开始了。有意思的是AniShort走的是「协作平台+智能体」路线，对标的是飞书而不是剪映——这说明专业团队的工业化生产需求正在爆发。",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "2026中国—东盟微短剧大赛6月14日启动征集，首次设AI微短剧专项赛道，为入选作品提供资金扶持和算力支持。Q1全行业上线AI微短剧约12.2万部，占比超95%，平均每天1300+部上线。字节漫剧日token消耗突破7000万元，首次超过真人短剧。| 设计竞赛网 财联社 36氪"
+      },
+      {
+        "name": "出海·全球化",
+        "content": "TikTok Q1 AI短剧分账超200万美元，环比增长超300%，AI短剧成为增速最快板块。阅文旗下WebNovel收入同比增长39%，近期推出海外漫剧平台ToonScroll，计划年内上线超千部漫剧。昆仑万维AI短剧平台单月流水超4800万美元，稳居海外短剧市场第一。| 36氪 娱乐资本论"
+      },
+      {
+        "name": "AI教育·培训",
+        "content": "教育部2026年重点工作明确：推动人工智能进入中小学课程标准、日常教学和考试评价。深圳已实现义务教育阶段AI课程全面普及，服务全市近900所学校，上线课程资源近3万节。全国设立509所AI教育基地校，先行先试探索AI教育新范式。| 中国教育网络 深圳市教育局"
+      },
+      {
+        "name": "行业要闻",
+        "content": "• SpaceX于6月13日上市，募资750亿美元创史上最大IPO，市值约7500亿美元，其中AI潜力（Starlink+算力租赁）是重要估值驱动。| Ars Technica 36氪\n\n• Anthropic最强模型Fable 5/Mythos 5上线仅72小时被美国政府强制下线——商务部以国家安全为由发出出口管制指令，这是美国政府首次动用出口管制权力叫停已商业化的AI产品。| Ars Technica Axios"
+      },
+      {
+        "name": "速览",
+        "content": "• DeepSeek启动首轮外部融资500亿元，估值最高4000亿，腾讯、宁德时代领投 | 新浪财经\n• 贝佐斯AI公司Prometheus融资120亿美元，估值410亿，打造「通用人工工程师」 | TechCrunch\n• 华为昇腾910C完成1.6万亿参数DeepSeek-V4-Pro全参数训练，国产算力里程碑 | 量子位\n• OpenAI宣布进入「第三阶段」：让先进AI普惠每个人 | OpenAI\n• Apple WWDC发布全新Siri AI，深度整合Apple Intelligence | Apple Newsroom"
+      }
+    ],
+    "daily_insight": "AI短剧日产1300部、工具平台不断拿融资，但90%的公司还在亏损。真正的瓶颈不是模型能力，也不是工具效率——是「懂故事的人」和「懂AI的人」之间的断层还没补上。下一个阶段的赢家，可能是那些能把影视叙事know-how封装进智能体工作流的人。",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-06-14.mp3"
+  },
+  "2026-06-15": {
+    "date": "2026-06-15",
+    "title": "AI 早报 | 6月15日",
+    "headline_title": "可灵AI全量上线3分钟长视频·AI短剧进入「一键生成」时代",
+    "headline_body": "快手可灵大模型完成重大升级，正式向全体创作者开放最高3分钟的高清连续视频生成功能，大幅降低AI短剧制作门槛。与此同时，字节跳动旗下即梦平台同步推出短剧专项扶持计划，承诺提供千万级流量倾斜和免费算力补贴，两大平台正面争夺AI短剧创作者。",
+    "headline_comment": "小咪说：可灵和即梦在AI短剧赛道正面开打，一边是工具升级，一边是流量补贴，这个组合拳下来，单兵作战的AI短剧创作者可能是最大受益者——但现在的问题是，产能上来了，好故事在哪？",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "继可灵3分钟长视频功能全量开放后，字节即梦宣布针对AI短剧创作者推出专属扶持计划，用流量倾斜+免费算力吸引优质团队入驻。海外方面，OpenAI的Sora已开始向部分企业用户灰度开放API测试，国内几家头部短剧公司已获首批测试名额，正在尝试基于全AI工作流的短剧试播集制作。| 综合报道"
+      },
+      {
+        "name": "AI内容生产",
+        "content": "最新行业调研显示，超60%的中小型短剧团队已在剧本和分镜环节全面引入AI工具以缩减人工成本。阿里大文娱也于近期推出一站式AI视频创作套件，将AI剧本拆解、多角色AI配音和自动转场剪辑无缝集成，主打提升单人创作者的工业化视频产出力。| 综合报道"
+      },
+      {
+        "name": "出海·全球化",
+        "content": "国内大模型公司MiniMax海外社交产品在多国应用榜单登顶，其情感陪伴与语音交互AI在全球年轻用户中渗透率持续上升。TikTok近期也在部分地区测试内置AI视频生成和智能本地化配音工具，帮助跨境电商卖家一键生成多语种营销短视频，进一步降低出海内容门槛。| 综合报道"
+      },
+      {
+        "name": "AI教育·培训",
+        "content": "暂无重点动态"
+      },
+      {
+        "name": "行业要闻",
+        "content": "暂无重点动态"
+      },
+      {
+        "name": "速览",
+        "content": "暂无重点动态"
+      }
+    ],
+    "daily_insight": "可灵3分钟长视频+即梦流量补贴，AI短剧的工具和分发两端都在加速。但真正决定这条赛道能不能跑通的，不是模型能力，是「能把AI当画笔用」的创作者。工具越强，对故事和审美的要求就越高——这才是接下来AI短剧真正的竞争壁垒。",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-06-15.mp3"
+  },
+  "2026-06-16": {
+    "date": "2026-06-16",
+    "title": "AI 早报 | 6月16日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI视频/教育/出海赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "出海·全球化",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI视频/教育/出海赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在500字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | 36氪 | 量子位）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI视频/教育/出海从业者有实际价值的信息\n\n## 站点存档（输出日报前执行）\n在你输出最终日报之前，用 terminal 执行以下步骤：\n\n1. 把你刚生成的日报内容保存为 JSON 文件到 ~/daily-report-site/data/YYYY-MM-DD.json\n   - 用 cat ~/daily-report-site/data/2026-06-07.json 查看格式参考\n   - 确保包含：date, title, headline_title, headline_body, headline_comment, sections（数组，每项有name和content）, daily_insight\n   - 不要包含 audio_file 字段\n\n2. 运行部署脚本重建静态站点并推送到 GitHub：\n   cd ~/daily-report-site && bash deploy.sh\n\n3. 确认成功后再输出最终日报文本作为你的回复\n\n## 结尾\n不需要署名或额外信息。\n\n## Error\n\n```\nRuntimeError: 📰 AI 早报 | 6月16日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-06-16.mp3"
+  },
+  "2026-07-28": {
+    "date": "2026-07-28",
+    "title": "AI 早报 | 7月28日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI视频/教育/出海赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "出海·全球化",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI视频/教育/出海赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在500字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | 36氪 | 量子位）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI视频/教育/出海从业者有实际价值的信息\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n📰 AI 早报 | 2026年7月28日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-07-28.mp3"
+  },
+  "2026-07-29": {
+    "date": "2026-07-29",
+    "title": "AI 早报 | 7月29日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI视频/教育/出海赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "出海·全球化",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI视频/教育/出海赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在500字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | 36氪 | 量子位）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI视频/教育/出海从业者有实际价值的信息\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n📰 AI 早报 | 2026年7月29日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-07-29.mp3"
+  },
+  "2026-07-30": {
+    "date": "2026-07-30",
+    "title": "AI 早报 | 7月30日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI视频/教育/出海赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "出海·全球化",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI视频/教育/出海赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在500字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | 36氪 | 量子位）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI视频/教育/出海从业者有实际价值的信息\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n📰 AI 早报 | 2026年7月30日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-07-30.mp3"
+  },
+  "2026-08-01": {
+    "date": "2026-08-01",
+    "title": "AI 早报 | 8月1日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI视频/教育/出海赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "出海·全球化",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI视频/教育/出海赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在500字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | 36氪 | 量子位）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI视频/教育/出海从业者有实际价值的信息\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n📰 AI 早报 | 2026年8月1日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-08-01.mp3"
+  },
+  "2026-08-02": {
+    "date": "2026-08-02",
+    "title": "AI 早报 | 8月2日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI视频/教育/出海赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "出海·全球化",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI视频/教育/出海赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在500字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | 36氪 | 量子位）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI视频/教育/出海从业者有实际价值的信息\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n📰 AI 早报 | 2026年8月2日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-08-02.mp3"
+  },
+  "2026-08-05": {
+    "date": "2026-08-05",
+    "title": "AI 早报 | 8月5日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI视频/教育/出海赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "出海·全球化",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI视频/教育/出海赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在500字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | 36氪 | 量子位）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI视频/教育/出海从业者有实际价值的信息\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n📰 AI 早报 | 2026年8月5日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-08-05.mp3"
+  },
+  "2026-08-06": {
+    "date": "2026-08-06",
+    "title": "AI 早报 | 8月6日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI视频/教育/出海赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "出海·全球化",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI视频/教育/出海赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在500字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | 36氪 | 量子位）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI视频/教育/出海从业者有实际价值的信息\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n📰 AI 早报 | 2026年8月6日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-08-06.mp3"
+  },
+  "2026-08-08": {
+    "date": "2026-08-08",
+    "title": "AI 早报 | 8月8日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI视频/教育/出海赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "出海·全球化",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI视频/教育/出海赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在500字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | 36氪 | 量子位）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI视频/教育/出海从业者有实际价值的信息\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n📰 AI 早报 | 2026年8月8日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-08-08.mp3"
+  },
+  "2026-08-09": {
+    "date": "2026-08-09",
+    "title": "AI 早报 | 8月9日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI视频/教育/出海赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "出海·全球化",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI视频/教育/出海赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在500字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | 36氪 | 量子位）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI视频/教育/出海从业者有实际价值的信息\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n📰 AI 早报 | 2026年8月9日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-08-09.mp3"
+  },
+  "2026-08-10": {
+    "date": "2026-08-10",
+    "title": "AI 早报 | 8月10日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI视频/教育/出海赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "出海·全球化",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI视频/教育/出海赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在500字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | 36氪 | 量子位）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI视频/教育/出海从业者有实际价值的信息\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n📰 AI 早报 | 2026年8月10日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-08-10.mp3"
+  },
+  "2026-08-12": {
+    "date": "2026-08-12",
+    "title": "AI 早报 | 8月12日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI视频/教育/出海赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "出海·全球化",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI视频/教育/出海赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在500字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | 36氪 | 量子位）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI视频/教育/出海从业者有实际价值的信息\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n📰 AI 早报 | 2026年8月12日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-08-12.mp3"
+  },
+  "2026-08-14": {
+    "date": "2026-08-14",
+    "title": "AI 早报 | 8月14日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI视频/教育/出海赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "出海·全球化",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI视频/教育/出海赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在500字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | 36氪 | 量子位）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI视频/教育/出海从业者有实际价值的信息\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n📰 AI 早报 | 2026年8月14日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-08-14.mp3"
+  },
+  "2026-08-18": {
+    "date": "2026-08-18",
+    "title": "AI 早报 | 8月18日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI视频/教育/出海赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "出海·全球化",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI视频/教育/出海赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在500字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | 36氪 | 量子位）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI视频/教育/出海从业者有实际价值的信息\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n📰 AI 早报 | 2026年8月18日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-08-18.mp3"
+  },
+  "2026-08-19": {
+    "date": "2026-08-19",
+    "title": "AI 早报 | 8月19日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI视频/教育/出海赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "出海·全球化",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI视频/教育/出海赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在500字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | 36氪 | 量子位）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI视频/教育/出海从业者有实际价值的信息\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n📰 AI 早报 | 2026年8月19日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-08-19.mp3"
+  },
+  "2026-08-21": {
+    "date": "2026-08-21",
+    "title": "AI 早报 | 8月21日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI视频/教育/出海赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "出海·全球化",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI视频/教育/出海赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在500字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | 36氪 | 量子位）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI视频/教育/出海从业者有实际价值的信息\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n📰 AI 早报 | 2026年8月21日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-08-21.mp3"
+  },
+  "2026-08-22": {
+    "date": "2026-08-22",
+    "title": "AI 早报 | 8月22日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI游戏/编辑器/美术管线/漫剧赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI游戏/视频/开发赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在600字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | GameLook | 量子位 | ProductHunt）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI游戏/编辑器/美术生产/短剧从业者有实际价值的信息\n- 小咪说/今日观察 尽量关联我自己的业务：AI游戏可视化社区、游戏编辑器、美术资产生产工具、AI漫剧\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n📰 AI 早报 | 2026年8月22日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-08-22.mp3"
+  },
+  "2026-08-23": {
+    "date": "2026-08-23",
+    "title": "AI 早报 | 8月23日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI游戏/编辑器/美术管线/漫剧赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI游戏/视频/开发赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在600字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | GameLook | 量子位 | ProductHunt）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI游戏/编辑器/美术生产/短剧从业者有实际价值的信息\n- 小咪说/今日观察 尽量关联我自己的业务：AI游戏可视化社区、游戏编辑器、美术资产生产工具、AI漫剧\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n📰 AI 早报 | 2026年8月23日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-08-23.mp3"
+  },
+  "2026-08-25": {
+    "date": "2026-08-25",
+    "title": "AI 早报 | 8月25日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI游戏/编辑器/美术管线/漫剧赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI游戏/视频/开发赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在600字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | GameLook | 量子位 | ProductHunt）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI游戏/编辑器/美术生产/短剧从业者有实际价值的信息\n- 小咪说/今日观察 尽量关联我自己的业务：AI游戏可视化社区、游戏编辑器、美术资产生产工具、AI漫剧\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n📰 AI 早报 | 2026年8月25日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-08-25.mp3"
+  },
+  "2026-08-26": {
+    "date": "2026-08-26",
+    "title": "AI 早报 | 8月26日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI游戏/编辑器/美术管线/漫剧赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI游戏/视频/开发赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在600字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | GameLook | 量子位 | ProductHunt）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI游戏/编辑器/美术生产/短剧从业者有实际价值的信息\n- 小咪说/今日观察 尽量关联我自己的业务：AI游戏可视化社区、游戏编辑器、美术资产生产工具、AI漫剧\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n📰 AI 早报 | 2026年8月26日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-08-26.mp3"
+  },
+  "2026-08-27": {
+    "date": "2026-08-27",
+    "title": "AI 早报 | 8月27日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI游戏/编辑器/美术管线/漫剧赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI游戏/视频/开发赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在600字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | GameLook | 量子位 | ProductHunt）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI游戏/编辑器/美术生产/短剧从业者有实际价值的信息\n- 小咪说/今日观察 尽量关联我自己的业务：AI游戏可视化社区、游戏编辑器、美术资产生产工具、AI漫剧\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n📰 AI 早报 | 2026年8月27日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-08-27.mp3"
+  },
+  "2026-08-28": {
+    "date": "2026-08-28",
+    "title": "AI 早报 | 8月28日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI游戏/编辑器/美术管线/漫剧赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI游戏/视频/开发赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在600字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | GameLook | 量子位 | ProductHunt）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI游戏/编辑器/美术生产/短剧从业者有实际价值的信息\n- 小咪说/今日观察 尽量关联我自己的业务：AI游戏可视化社区、游戏编辑器、美术资产生产工具、AI漫剧\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n📰 AI 早报 | 2026年8月28日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-08-28.mp3"
+  },
+  "2026-08-29": {
+    "date": "2026-08-29",
+    "title": "AI 早报 | 8月29日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI游戏/编辑器/美术管线/漫剧赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI游戏/视频/开发赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在600字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | GameLook | 量子位 | ProductHunt）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI游戏/编辑器/美术生产/短剧从业者有实际价值的信息\n- 小咪说/今日观察 尽量关联我自己的业务：AI游戏可视化社区、游戏编辑器、美术资产生产工具、AI漫剧\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n📰 AI 早报 | 2026年8月29日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-08-29.mp3"
+  },
+  "2026-08-30": {
+    "date": "2026-08-30",
+    "title": "AI 早报 | 8月30日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI游戏/编辑器/美术管线/漫剧赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI游戏/视频/开发赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在600字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | GameLook | 量子位 | ProductHunt）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI游戏/编辑器/美术生产/短剧从业者有实际价值的信息\n- 小咪说/今日观察 尽量关联我自己的业务：AI游戏可视化社区、游戏编辑器、美术资产生产工具、AI漫剧\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n📰 AI 早报 | 2026年8月30日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-08-30.mp3"
+  },
+  "2026-08-31": {
+    "date": "2026-08-31",
+    "title": "AI 早报 | 8月31日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI游戏/编辑器/美术管线/漫剧赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI游戏/视频/开发赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在600字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | GameLook | 量子位 | ProductHunt）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI游戏/编辑器/美术生产/短剧从业者有实际价值的信息\n- 小咪说/今日观察 尽量关联我自己的业务：AI游戏可视化社区、游戏编辑器、美术资产生产工具、AI漫剧\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n📰 AI 早报 | 2026年8月31日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-08-31.mp3"
+  },
+  "2026-09-01": {
+    "date": "2026-09-01",
+    "title": "AI 早报 | 9月1日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI游戏/编辑器/美术管线/漫剧赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI游戏/视频/开发赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在600字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | GameLook | 量子位 | ProductHunt）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI游戏/编辑器/美术生产/短剧从业者有实际价值的信息\n- 小咪说/今日观察 尽量关联我自己的业务：AI游戏可视化社区、游戏编辑器、美术资产生产工具、AI漫剧\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n📰 AI 早报 | 2026年9月1日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-09-01.mp3"
+  },
+  "2026-09-02": {
+    "date": "2026-09-02",
+    "title": "AI 早报 | 9月2日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI游戏/编辑器/美术管线/漫剧赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI游戏/视频/开发赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在600字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | GameLook | 量子位 | ProductHunt）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI游戏/编辑器/美术生产/短剧从业者有实际价值的信息\n- 小咪说/今日观察 尽量关联我自己的业务：AI游戏可视化社区、游戏编辑器、美术资产生产工具、AI漫剧\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n📰 AI 早报 | 2026年9月2日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-09-02.mp3"
+  },
+  "2026-09-03": {
+    "date": "2026-09-03",
+    "title": "AI 早报 | 9月3日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI游戏/编辑器/美术管线/漫剧赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI游戏/视频/开发赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在600字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | GameLook | 量子位 | ProductHunt）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI游戏/编辑器/美术生产/短剧从业者有实际价值的信息\n- 小咪说/今日观察 尽量关联我自己的业务：AI游戏可视化社区、游戏编辑器、美术资产生产工具、AI漫剧\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n📰 AI 早报 | 2026年9月3日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-09-03.mp3"
+  },
+  "2026-09-04": {
+    "date": "2026-09-04",
+    "title": "AI 早报 | 9月4日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI游戏/编辑器/美术管线/漫剧赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI游戏/视频/开发赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在600字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | GameLook | 量子位 | ProductHunt）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI游戏/编辑器/美术生产/短剧从业者有实际价值的信息\n- 小咪说/今日观察 尽量关联我自己的业务：AI游戏可视化社区、游戏编辑器、美术资产生产工具、AI漫剧\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n以下是 2026年9月5日执行的 AI 早报：\n\n📰 AI 早报 | 2026年9月4日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-09-04.mp3"
+  },
+  "2026-09-05": {
+    "date": "2026-09-05",
+    "title": "AI 早报 | 9月5日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI游戏/编辑器/美术管线/漫剧赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI游戏/视频/开发赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在600字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | GameLook | 量子位 | ProductHunt）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI游戏/编辑器/美术生产/短剧从业者有实际价值的信息\n- 小咪说/今日观察 尽量关联我自己的业务：AI游戏可视化社区、游戏编辑器、美术资产生产工具、AI漫剧\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\nHere is the daily report based on my actual search results. Note that I hit tool-call limits and could not fully verify game/short-drama-specific coverage from GameLook/量子位 (those sites were unreachable: GameLook returned no connection, 量子位's homepage returned only JS shells). I'm reporting only items I actually retrieved and can stand behind, and using the required fallback for sections where I found nothing verifiable.\n\n📰 AI 早报 | 2026年9月5日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-09-05.mp3"
+  },
+  "2026-09-07": {
+    "date": "2026-09-07",
+    "title": "AI 早报 | 9月7日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI游戏/编辑器/美术管线/漫剧赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI游戏/视频/开发赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在600字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | GameLook | 量子位 | ProductHunt）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI游戏/编辑器/美术生产/短剧从业者有实际价值的信息\n- 小咪说/今日观察 尽量关联我自己的业务：AI游戏可视化社区、游戏编辑器、美术资产生产工具、AI漫剧\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n📰 AI 早报 | 2026年9月7日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-09-07.mp3"
+  },
+  "2026-09-09": {
+    "date": "2026-09-09",
+    "title": "AI 早报 | 9月9日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI游戏/编辑器/美术管线/漫剧赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI游戏/视频/开发赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在600字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | GameLook | 量子位 | ProductHunt）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI游戏/编辑器/美术生产/短剧从业者有实际价值的信息\n- 小咪说/今日观察 尽量关联我自己的业务：AI游戏可视化社区、游戏编辑器、美术资产生产工具、AI漫剧\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n📰 AI 早报 | 2026年9月9日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-09-09.mp3"
+  },
+  "2026-09-10": {
+    "date": "2026-09-10",
+    "title": "AI 早报 | 9月10日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI游戏/编辑器/美术管线/漫剧赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI游戏/视频/开发赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在600字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | GameLook | 量子位 | ProductHunt）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI游戏/编辑器/美术生产/短剧从业者有实际价值的信息\n- 小咪说/今日观察 尽量关联我自己的业务：AI游戏可视化社区、游戏编辑器、美术资产生产工具、AI漫剧\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n📰 AI 早报 | 2026年9月10日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-09-10.mp3"
+  },
+  "2026-09-12": {
+    "date": "2026-09-12",
+    "title": "AI 早报 | 9月12日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI游戏/编辑器/美术管线/漫剧赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI游戏/视频/开发赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在600字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | GameLook | 量子位 | ProductHunt）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI游戏/编辑器/美术生产/短剧从业者有实际价值的信息\n- 小咪说/今日观察 尽量关联我自己的业务：AI游戏可视化社区、游戏编辑器、美术资产生产工具、AI漫剧\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n📰 AI 早报 | 2026年9月12日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-09-12.mp3"
+  },
+  "2026-09-14": {
+    "date": "2026-09-14",
+    "title": "AI 早报 | 9月14日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI游戏/编辑器/美术管线/漫剧赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI游戏/视频/开发赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在600字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | GameLook | 量子位 | ProductHunt）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI游戏/编辑器/美术生产/短剧从业者有实际价值的信息\n- 小咪说/今日观察 尽量关联我自己的业务：AI游戏可视化社区、游戏编辑器、美术资产生产工具、AI漫剧\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n📰 AI 早报 | 2026年9月14日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-09-14.mp3"
+  },
+  "2026-09-15": {
+    "date": "2026-09-15",
+    "title": "AI 早报 | 9月15日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI游戏/编辑器/美术管线/漫剧赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI游戏/视频/开发赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在600字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | GameLook | 量子位 | ProductHunt）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI游戏/编辑器/美术生产/短剧从业者有实际价值的信息\n- 小咪说/今日观察 尽量关联我自己的业务：AI游戏可视化社区、游戏编辑器、美术资产生产工具、AI漫剧\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n📰 AI 早报 | 2026年9月15日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-09-15.mp3"
+  },
+  "2026-09-17": {
+    "date": "2026-09-17",
+    "title": "AI 早报 | 9月17日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI游戏/编辑器/美术管线/漫剧赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI游戏/视频/开发赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在600字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | GameLook | 量子位 | ProductHunt）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI游戏/编辑器/美术生产/短剧从业者有实际价值的信息\n- 小咪说/今日观察 尽量关联我自己的业务：AI游戏可视化社区、游戏编辑器、美术资产生产工具、AI漫剧\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n📰 AI 早报 | 2026年9月17日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-09-17.mp3"
+  },
+  "2026-09-18": {
+    "date": "2026-09-18",
+    "title": "AI 早报 | 9月18日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI游戏/编辑器/美术管线/漫剧赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI游戏/视频/开发赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在600字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | GameLook | 量子位 | ProductHunt）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI游戏/编辑器/美术生产/短剧从业者有实际价值的信息\n- 小咪说/今日观察 尽量关联我自己的业务：AI游戏可视化社区、游戏编辑器、美术资产生产工具、AI漫剧\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n📰 AI 早报 | 2026年9月18日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-09-18.mp3"
+  },
+  "2026-09-19": {
+    "date": "2026-09-19",
+    "title": "AI 早报 | 9月19日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI游戏/编辑器/美术管线/漫剧赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI游戏/视频/开发赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在600字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | GameLook | 量子位 | ProductHunt）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI游戏/编辑器/美术生产/短剧从业者有实际价值的信息\n- 小咪说/今日观察 尽量关联我自己的业务：AI游戏可视化社区、游戏编辑器、美术资产生产工具、AI漫剧\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n📰 AI 早报 | 2026年9月19日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-09-19.mp3"
+  },
+  "2026-09-20": {
+    "date": "2026-09-20",
+    "title": "AI 早报 | 9月20日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI游戏/编辑器/美术管线/漫剧赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI游戏/视频/开发赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在600字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | GameLook | 量子位 | ProductHunt）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI游戏/编辑器/美术生产/短剧从业者有实际价值的信息\n- 小咪说/今日观察 尽量关联我自己的业务：AI游戏可视化社区、游戏编辑器、美术资产生产工具、AI漫剧\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n📰 AI 早报 | 2026年9月20日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-09-20.mp3"
+  },
+  "2026-09-21": {
+    "date": "2026-09-21",
+    "title": "AI 早报 | 9月21日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI游戏/编辑器/美术管线/漫剧赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI游戏/视频/开发赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在600字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | GameLook | 量子位 | ProductHunt）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI游戏/编辑器/美术生产/短剧从业者有实际价值的信息\n- 小咪说/今日观察 尽量关联我自己的业务：AI游戏可视化社区、游戏编辑器、美术资产生产工具、AI漫剧\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n📰 AI 早报 | 2026年9月21日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-09-21.mp3"
+  },
+  "2026-09-22": {
+    "date": "2026-09-22",
+    "title": "AI 早报 | 9月22日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI游戏/编辑器/美术管线/漫剧赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI游戏/视频/开发赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在600字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | GameLook | 量子位 | ProductHunt）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI游戏/编辑器/美术生产/短剧从业者有实际价值的信息\n- 小咪说/今日观察 尽量关联我自己的业务：AI游戏可视化社区、游戏编辑器、美术资产生产工具、AI漫剧\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n📰 AI 早报 | 2026年9月22日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-09-22.mp3"
+  },
+  "2026-09-23": {
+    "date": "2026-09-23",
+    "title": "AI 早报 | 9月23日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI游戏/编辑器/美术管线/漫剧赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI游戏/视频/开发赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在600字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | GameLook | 量子位 | ProductHunt）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI游戏/编辑器/美术生产/短剧从业者有实际价值的信息\n- 小咪说/今日观察 尽量关联我自己的业务：AI游戏可视化社区、游戏编辑器、美术资产生产工具、AI漫剧\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n📰 AI 早报 | 2026年9月23日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-09-23.mp3"
+  },
+  "2026-09-24": {
+    "date": "2026-09-24",
+    "title": "AI 早报 | 9月24日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI游戏/编辑器/美术管线/漫剧赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI游戏/视频/开发赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在600字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | GameLook | 量子位 | ProductHunt）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI游戏/编辑器/美术生产/短剧从业者有实际价值的信息\n- 小咪说/今日观察 尽量关联我自己的业务：AI游戏可视化社区、游戏编辑器、美术资产生产工具、AI漫剧\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n📰 AI 早报 | 2026年9月24日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-09-24.mp3"
+  },
+  "2026-09-25": {
+    "date": "2026-09-25",
+    "title": "AI 早报 | 9月25日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI游戏/编辑器/美术管线/漫剧赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI游戏/视频/开发赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在600字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | GameLook | 量子位 | ProductHunt）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI游戏/编辑器/美术生产/短剧从业者有实际价值的信息\n- 小咪说/今日观察 尽量关联我自己的业务：AI游戏可视化社区、游戏编辑器、美术资产生产工具、AI漫剧\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n📰 AI 早报 | 2026年9月25日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-09-25.mp3"
+  },
+  "2026-09-29": {
+    "date": "2026-09-29",
+    "title": "AI 早报 | 9月29日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI游戏/编辑器/美术管线/漫剧赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI游戏/视频/开发赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在600字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | GameLook | 量子位 | ProductHunt）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI游戏/编辑器/美术生产/短剧从业者有实际价值的信息\n- 小咪说/今日观察 尽量关联我自己的业务：AI游戏可视化社区、游戏编辑器、美术资产生产工具、AI漫剧\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n📰 AI 早报 | 2026年9月29日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-09-29.mp3"
+  },
+  "2026-09-30": {
+    "date": "2026-09-30",
+    "title": "AI 早报 | 9月30日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI游戏/编辑器/美术管线/漫剧赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI游戏/视频/开发赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在600字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | GameLook | 量子位 | ProductHunt）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI游戏/编辑器/美术生产/短剧从业者有实际价值的信息\n- 小咪说/今日观察 尽量关联我自己的业务：AI游戏可视化社区、游戏编辑器、美术资产生产工具、AI漫剧\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n📰 AI 早报 | 2026年9月30日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-09-30.mp3"
+  },
+  "2026-10-01": {
+    "date": "2026-10-01",
+    "title": "AI 早报 | 10月1日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI游戏/编辑器/美术管线/漫剧赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI游戏/视频/开发赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在600字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | GameLook | 量子位 | ProductHunt）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI游戏/编辑器/美术生产/短剧从业者有实际价值的信息\n- 小咪说/今日观察 尽量关联我自己的业务：AI游戏可视化社区、游戏编辑器、美术资产生产工具、AI漫剧\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n📰 AI 早报 | 2026年10月1日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-10-01.mp3"
+  },
+  "2026-10-02": {
+    "date": "2026-10-02",
+    "title": "AI 早报 | 10月2日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI游戏/编辑器/美术管线/漫剧赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI游戏/视频/开发赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在600字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | GameLook | 量子位 | ProductHunt）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI游戏/编辑器/美术生产/短剧从业者有实际价值的信息\n- 小咪说/今日观察 尽量关联我自己的业务：AI游戏可视化社区、游戏编辑器、美术资产生产工具、AI漫剧\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n📰 AI 早报 | 2026年10月2日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-10-02.mp3"
+  },
+  "2026-10-03": {
+    "date": "2026-10-03",
+    "title": "AI 早报 | 10月3日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI游戏/编辑器/美术管线/漫剧赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI游戏/视频/开发赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在600字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | GameLook | 量子位 | ProductHunt）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI游戏/编辑器/美术生产/短剧从业者有实际价值的信息\n- 小咪说/今日观察 尽量关联我自己的业务：AI游戏可视化社区、游戏编辑器、美术资产生产工具、AI漫剧\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n## Response\n\n📰 AI 早报 | 2026年10月3日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-10-03.mp3"
+  },
+  "2026-10-04": {
+    "date": "2026-10-04",
+    "title": "AI 早报 | 10月4日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI游戏/编辑器/美术管线/漫剧赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI游戏/视频/开发赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在600字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | GameLook | 量子位 | ProductHunt）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI游戏/编辑器/美术生产/短剧从业者有实际价值的信息\n- 小咪说/今日观察 尽量关联我自己的业务：AI游戏可视化社区、游戏编辑器、美术资产生产工具、AI漫剧\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n**Response Characters:** 1474\n## Response\n\n📰 AI 早报 | 2026年10月4日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-10-04.mp3"
+  },
+  "2026-10-05": {
+    "date": "2026-10-05",
+    "title": "AI 早报 | 10月5日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI游戏/编辑器/美术管线/漫剧赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI游戏/视频/开发赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在600字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | GameLook | 量子位 | ProductHunt）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI游戏/编辑器/美术生产/短剧从业者有实际价值的信息\n- 小咪说/今日观察 尽量关联我自己的业务：AI游戏可视化社区、游戏编辑器、美术资产生产工具、AI漫剧\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n**Response Characters:** 1544\n## Response\n\n📰 AI 早报 | 2026年10月5日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-10-05.mp3"
+  },
+  "2026-10-06": {
+    "date": "2026-10-06",
+    "title": "AI 早报 | 10月6日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI游戏/编辑器/美术管线/漫剧赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI游戏/视频/开发赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在600字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | GameLook | 量子位 | ProductHunt）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI游戏/编辑器/美术生产/短剧从业者有实际价值的信息\n- 小咪说/今日观察 尽量关联我自己的业务：AI游戏可视化社区、游戏编辑器、美术资产生产工具、AI漫剧\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n**Response Characters:** 1656\n## Response\n\n📰 AI 早报 | 2026年10月6日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-10-06.mp3"
+  },
+  "2026-10-08": {
+    "date": "2026-10-08",
+    "title": "AI 早报 | 10月8日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI游戏/编辑器/美术管线/漫剧赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI游戏/视频/开发赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在600字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | GameLook | 量子位 | ProductHunt）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI游戏/编辑器/美术生产/短剧从业者有实际价值的信息\n- 小咪说/今日观察 尽量关联我自己的业务：AI游戏可视化社区、游戏编辑器、美术资产生产工具、AI漫剧\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n**Response Characters:** 1282\n## Response\n\n📰 AI 早报 | 2026年10月8日",
+    "source": "AI早报每日推送",
+    "audio_file": "audio/2026-10-08.mp3"
+  },
+  "2026-10-14": {
+    "date": "2026-10-14",
+    "title": "AI 早报 | 10月14日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI游戏/编辑器/美术管线/漫剧赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI游戏/视频/开发赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在600字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | GameLook | 量子位 | ProductHunt）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI游戏/编辑器/美术生产/短剧从业者有实际价值的信息\n- 小咪说/今日观察 尽量关联我自己的业务：AI游戏可视化社区、游戏编辑器、美术资产生产工具、AI漫剧\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n**Response Characters:** 1727\n## Response\n\n📰 AI 早报 | 2026年10月14日",
+    "source": "AI早报每日推送"
+  },
+  "2026-10-15": {
+    "date": "2026-10-15",
+    "title": "AI 早报 | 10月15日",
+    "headline_title": "[标题·一句话点题]",
+    "headline_body": "[2-3句简述事实]",
+    "headline_comment": "[一句话解读，关联AI游戏/编辑器/美术管线/漫剧赛道，语气像朋友聊天]",
+    "sections": [
+      {
+        "name": "AI视频·短剧",
+        "content": "[2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "行业要闻",
+        "content": "[最多2条，每条2-3句，实在没有则写\"暂无重点动态\"]"
+      },
+      {
+        "name": "速览",
+        "content": "• [简短·一行]\n• [最多5条，实在没有则写\"暂无重点动态\"]"
+      }
+    ],
+    "daily_insight": "[一句对AI游戏/视频/开发赛道的个人观察或问题，必须有]\n\n## 写作纪律\n- 每条不超过3句话，头条不超过5句\n- 整体控制在600字以内，3分钟读完\n- 语气像给熟悉的朋友汇报，不要官腔\n- 每条标注来源媒体（如 | GameLook | 量子位 | ProductHunt）\n- 没有合适新闻时写\"暂无重点动态\"代替凭空捏造\n- 不确定的事不要说确定，区分事实和推测\n- 优先选对AI游戏/编辑器/美术生产/短剧从业者有实际价值的信息\n- 小咪说/今日观察 尽量关联我自己的业务：AI游戏可视化社区、游戏编辑器、美术资产生产工具、AI漫剧\n\n## 结尾\n直接输出日报文本即可，不需要额外说明或署名。\n\n**Response Characters:** 1569\n## Response\n\n📰 AI 早报 | 2026年10月15日",
+    "source": "AI早报每日推送"
+  }
+};
+
+function getDateFromPath(){var m=window.location.pathname.match(/\/(\d{4}-\d{2}-\d{2})\.html$/);return m?m[1]:null;}
+function navigateTo(d){
+  if(d){window.history.pushState({},'',window.BP+d+'.html');}
+  else{window.history.pushState({},'',window.BP);}
+  render();
+}
+function fmtCN(s){var d=new Date(s+'T00:00:00'),w=['日','一','二','三','四','五','六'];return(d.getMonth()+1)+'月'+d.getDate()+'日 周'+w[d.getDay()];}
+function fmtTime(t){if(!t||isNaN(t))return'0:00';var m=Math.floor(t/60),s=Math.floor(t%60);return m+':'+(s<10?'0':'')+s;}
+
+function renderCal(cur){
+  var n=new Date(),y=n.getFullYear(),m=n.getMonth();
+  var fd=new Date(y,m,1).getDay(),dim=new Date(y,m+1,0).getDate();
+  var rds={};for(var k in REPORTS)rds[k]=1;
+  var h='<div class="cal-month-label">'+y+'年'+(m+1)+'月</div><div class="calendar-grid">';
+  '日一二三四五六'.split('').forEach(function(d){h+='<div style="font-family:Inter,sans-serif;font-size:10px;color:#3d3d52;text-align:center;">'+d+'</div>'});
+  for(var i=0;i<fd;i++)h+='<div class="cal-day other-month"></div>';
+  for(var d=1;d<=dim;d++){
+    var ds=y+'-'+(m+1+'').padStart(2,'0')+'-'+(d+'').padStart(2,'0');
+    var has=rds[ds],isA=ds===cur;
+    var cls='cal-day'+(has?' has-report':'')+(isA?' active':'');
+    if(has){h+='<a href="'+window.BP+ds+'.html" class="'+cls+'" onclick="event.preventDefault();navigateTo(\''+ds+'\')">'+d+'</a>';}
+    else{h+='<div class="'+cls+'">'+d+'</div>';}
+  }
+  h+='</div>';
+  document.getElementById('calendar').innerHTML=h;
+}
+
+function renderRecent(cur){
+  var s=Object.keys(REPORTS).sort().reverse(),h='';
+  s.forEach(function(d){
+    var r=REPORTS[d];
+    h+='<a href="'+window.BP+d+'.html" class="recent-item" onclick="event.preventDefault();navigateTo(\''+d+'\')">'
+      +'<div class="date">'+fmtCN(d)+'</div><div class="title">'+r.title+'</div>'
+      +(r.audio_file?'<div class="voice-indicator">语音版</div>':'')+'</a>';
+  });
+  if(!s.length)h='<div style="color:#3d3d52;font-size:13px;">暂无日报</div>';
+  document.getElementById('recent-list').innerHTML=h;
+}
+
+function renderHome(){
+  var s=Object.keys(REPORTS).sort().reverse(),lt=s[0];
+  var h='<div class="page-header"><div class="breadcrumb">INDEX</div><h2>AI 日报</h2><div class="desc">每日AI行业动态 · 文字 + 语音版</div></div>';
+  if(lt){
+    var r=REPORTS[lt];
+    h+='<div class="feature-card"><div class="meta">最新 · '+fmtCN(lt)+'</div><h3>'+(r.headline_title||r.title)+'</h3>'
+      +'<p>'+(r.headline_body||'').substring(0,120)+((r.headline_body||'').length>120?'……':'')+'</p>'
+      +'<div class="actions">'
+      +'<a href="'+window.BP+lt+'.html" onclick="event.preventDefault();navigateTo(\''+lt+'\')">阅读全文</a>'
+      +(r.audio_file?'<a href="'+window.BP+lt+'.html#player" onclick="event.preventDefault();navigateTo(\''+lt+'\')">收听语音</a>':'')
+      +'</div></div>';
+  }
+  h+='<div style="margin-top:32px;">';
+  s.forEach(function(d){
+    if(lt&&d===lt)return;
+    var r=REPORTS[d];
+    h+='<a href="'+window.BP+d+'.html" class="report-card" onclick="event.preventDefault();navigateTo(\''+d+'\')">'
+      +'<div class="date">'+fmtCN(d)+'</div><div class="title">'+r.title+'</div>'
+      +'<div class="summary">'+(r.headline_title||'')+'</div>'
+      +'<div class="tags">'+r.sections.slice(0,3).map(function(s){return '<span>'+s.name+'</span>';}).join('')+'</div>'
+      +'</a>';
+  });
+  h+='</div>';
+  if(!s.length)h+='<div class="empty-state"><h3>暂无日报</h3><p>日报正在路上</p></div>';
+  return h;
+}
+
+function renderDaily(ds){
+  var r=REPORTS[ds];
+  if(!r)return '<div class="empty-state"><h3>日报未找到</h3><p><a href="'+window.BP+'" class="back-link" onclick="event.preventDefault();navigateTo(null)">返回首页</a></p></div>';
+  var h='<a href="'+window.BP+'" class="back-link" onclick="event.preventDefault();navigateTo(null)">返回首页</a>'
+    +'<div class="report-page"><div class="report-header"><h1>'+r.title+'</h1><div class="meta">'+fmtCN(ds)+'</div></div>';
+  if(r.audio_file){
+    h+='<div class="voice-player" id="player">'
+      +'<button class="play-btn" onclick="toggleAudio(\''+ds+'\')" id="play-btn-'+ds+'"></button>'
+      +'<div class="player-info"><div class="label">语音版</div><div class="time" id="time-'+ds+'">点击播放</div></div>'
+      +'<audio id="audio-'+ds+'" src="'+r.audio_file+'" preload="none" onended="onAudioEnd(\''+ds+'\')" ontimeupdate="onTimeUpdate(\''+ds+'\')"></audio>'
+      +'</div>';
+  }
+  h+='<div class="headline-block"><div class="headline-tag">头条</div><h2>'+(r.headline_title||'')+'</h2><p>'+(r.headline_body||'')+'</p>'
+    +(r.headline_comment?'<div class="comment">小咪说：'+r.headline_comment+'</div>':'')+'</div>';
+  (r.sections||[]).forEach(function(s){
+    h+='<div class="section-block"><h3>'+s.name+'</h3><p>'+s.content.replace(/\n/g,'<br>')+'</p></div>';
+  });
+  if(r.daily_insight)h+='<div class="insight-block"><h3>今日观察</h3><p>'+r.daily_insight+'</p></div>';
+  h+='</div>';
+  return h;
+}
+
+var curAudio=null;
+function toggleAudio(ds){
+  var a=document.getElementById('audio-'+ds),b=document.getElementById('play-btn-'+ds),t=document.getElementById('time-'+ds);
+  if(curAudio&&curAudio!==a){curAudio.pause();var pb=document.querySelector('.play-btn.playing');if(pb)pb.classList.remove('playing');}
+  if(a.paused){a.play();b.classList.add('playing');curAudio=a;t.textContent=fmtTime(a.currentTime);}
+  else{a.pause();b.classList.remove('playing');curAudio=null;}
+}
+function onAudioEnd(ds){var b=document.getElementById('play-btn-'+ds),t=document.getElementById('time-'+ds);b.classList.remove('playing');t.textContent='播放结束';curAudio=null;}
+function onTimeUpdate(ds){var t=document.getElementById('time-'+ds),a=document.getElementById('audio-'+ds);t.textContent=fmtTime(a.currentTime)+' / '+fmtTime(a.duration||0);}
+function render(){var d=getDateFromPath();renderCal(d);renderRecent(d);document.getElementById('main-content').innerHTML=d?renderDaily(d):renderHome();}
+window.addEventListener('popstate',render);render();
+</script>
+</body>
+</html>
